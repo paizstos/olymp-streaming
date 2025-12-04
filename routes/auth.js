@@ -83,21 +83,21 @@ router.get('/extraits', (req, res) => {
       title: "Teaser AM26 – Dans le vestiaire",
       description: "30 secondes dans le vestiaire des Léopards avec notre influenceur star.",
       thumbnailUrl: "https://images.pexels.com/photos/399187/pexels-photo-399187.jpeg",
-      videoUrl: "/media/influenceur-teaser.mp4"
+      videoUrl: "videos/video_masuaku2.mp4",
     },
     {
       id: 2,
       title: "Micro-trottoir – Fans à Kinshasa",
       description: "Réactions à chaud des supporters, ambiance 100% OLYMP.",
       thumbnailUrl: "https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg",
-      videoUrl: "/media/influenceur-teaser.mp4"
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
     },
     {
       id: 3,
       title: "Coulisses du plateau OLYMP",
       description: "Les petites blagues hors antenne, que tu ne verras nulle part ailleurs.",
       thumbnailUrl: "https://images.pexels.com/photos/799091/pexels-photo-799091.jpeg",
-      videoUrl: "/media/influenceur-teaser.mp4"
+      videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4'
     }
   ];
 
