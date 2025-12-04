@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Extraits gratuits – OLYMP Streaming</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="page-wrapper extraits-wrapper">
+    <%- include('../partials/flash') %>
+
+    <section class="extraits-hero">
+      <div class="extraits-hero-text">
+        <h1>Quelques minutes pour tomber accro.</h1>
+        <p>
+          Regarde gratuitement quelques extraits exclusifs tournés par notre influenceur star.
+          Si tu vibres déjà ici, imagine le reste derrière l’abonnement OLYMP.
+        </p>
+        <div class="extraits-cta">
+          <a href="/register" class="btn btn-primary">Créer mon compte</a>
+          <a href="/login" class="btn btn-ghost">Je suis déjà abonné</a>
+        </div>
+      </div>
+
+      <div class="extraits-hero-tagline">
+        <span class="pill-live">Extraits OFFERTS</span>
+        <span class="pill-small">Sans inscription · Temps limité</span>
+      </div>
+    </section>
+
+    <section class="extraits-grid-section">
+      <h2 class="extraits-grid-title">Les extraits OLYMP</h2>
+      <p class="extraits-grid-subtitle">
+        Clique sur un extrait pour le lancer. Si tu souris, tu t’abonnes.
+      </p>
+
+      <div class="extraits-grid">
+        <% previews.forEach((p, index) => { %>
+          <article class="extrait-card" data-video="<%= p.videoUrl %>">
+            <div class="extrait-thumb" style="background-image: url('<%= p.thumbnailUrl %>')">
+              <div class="extrait-thumb-overlay"></div>
+              <button class="extrait-play-btn" type="button">
+                ▶
+              </button>
+              <span class="extrait-chip">Teaser #<%= index + 1 %></span>
+            </div>
+            <div class="extrait-body">
+              <h3 class="extrait-title"><%= p.title %></h3>
+              <p class="extrait-desc"><%= p.description %></p>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    </section>
+
+    <!-- Modal vidéo extraits -->
+    <div class="extrait-modal" id="extraitModal">
+      <div class="extrait-modal-backdrop" id="extraitModalBackdrop"></div>
+      <div class="extrait-modal-inner">
+        <button class="extrait-modal-close" id="extraitModalClose" type="button">✕</button>
+        <video id="extraitModalVideo" class="extrait-modal-video" controls autoplay>
+          <source id="extraitModalSource" src="" type="video/mp4">
+          Votre navigateur ne supporte pas la vidéo HTML5.
+        </video>
+        <div class="extrait-modal-footer">
+          <p>Tu veux voir la suite ?</p>
+          <a href="/register" class="btn btn-primary">Je m’abonne à OLYMP</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/extraits.js"></script>
+</body>
+</html>

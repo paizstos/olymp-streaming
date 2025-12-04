@@ -1,0 +1,6 @@
+node_modules/
+.env
+*.log
+olymp.db
+*.sqlite
+.DS_Store

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Streams – OLYMP Streaming</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="page-wrapper">
+    <%- include('../partials/flash') %>
+
+    <section class="videos-container">
+      <div class="videos-header">
+        <h2>Streams & Replays OLYMP</h2>
+        <p>Choisis ton match, ton débat ou ton documentaire.</p>
+      </div>
+
+      <div class="videos-grid">
+        <% if (videos.length === 0) { %>
+          <p>Aucune vidéo pour le moment. Lance le seed ou ajoute des vidéos dans la base.</p>
+        <% } %>
+
+        <% videos.forEach(video => { %>
+          <a href="/videos/<%= video.id %>" class="video-card">
+            <div class="video-thumb" style="background-image:url('<%= video.thumbnailUrl || "" %>')">
+              <% if (video.isLive) { %>
+                <span class="live-badge">STREAM</span>
+              <% } %>
+            </div>
+            <div class="video-info">
+              <h3><%= video.title %></h3>
+              <p><%= video.description || "" %></p>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

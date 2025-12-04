@@ -1,0 +1,31 @@
+<%- include('../layout', { body: `
+<section class="auth-container">
+  <div class="auth-card">
+    <h2>Créer mon compte OLYMP</h2>
+    <p class="auth-subtitle">1. Inscription  •  2. Abonnement  •  3. Match.</p>
+
+    <form method="POST" action="/register" class="form">
+      <label>Nom complet
+        <input type="text" name="fullName" required>
+      </label>
+
+      <label>Email
+        <input type="email" name="email" required>
+      </label>
+
+      <label>Mot de passe
+        <input type="password" name="password" required minlength="6">
+      </label>
+
+      <button class="btn btn-primary btn-full" type="submit">
+        Continuer vers l’abonnement
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Déjà inscrit ?
+      <a href="/login">Se connecter</a>
+    </p>
+  </div>
+</section>
+` }) %>

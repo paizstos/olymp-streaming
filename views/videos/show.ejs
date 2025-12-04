@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title><%= video.title %> – OLYMP Streaming</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="page-with-scores">
+    <%- include('../partials/scores') %>
+
+    <main class="page-wrapper video-main">
+      <%- include('../partials/flash') %>
+
+      <section class="video-page">
+        <div class="video-layout">
+          <div class="video-player-card">
+            <% if (video.isLive) { %>
+              <span class="live-badge large">STREAM EN DIRECT</span>
+            <% } %>
+
+            <div class="player-wrapper">
+              <video controls poster="<%= video.thumbnailUrl || '' %>">
+                <source src="<%= video.videoUrl %>" type="video/mp4">
+                Votre navigateur ne supporte pas la lecture vidéo.
+              </video>
+            </div>
+
+            <h2 class="video-title"><%= video.title %></h2>
+            <p class="video-desc"><%= video.description || "" %></p>
+          </div>
+
+          <%- include('../partials/pub') %>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/videoPage.js"></script>
+</body>
+</html>

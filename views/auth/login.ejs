@@ -1,0 +1,26 @@
+<%- include('../layout', { body: `
+<section class="auth-container">
+  <div class="auth-card">
+    <h2>Connexion</h2>
+    <p class="auth-subtitle">Reprends le match là où tu t’es arrêté.</p>
+
+    <form method="POST" action="/login" class="form">
+      <label>Email
+        <input type="email" name="email" required>
+      </label>
+
+      <label>Mot de passe
+        <input type="password" name="password" required>
+      </label>
+
+      <button class="btn btn-primary btn-full" type="submit">Se connecter</button>
+    </form>
+
+    <p class="auth-footer">
+      Pas encore de compte ?
+      <a href="/register">Créer un compte</a>
+    </p>
+  </div>
+</section>
+` }) %>
+<!--<h3>Vivez la CAN Maroc 2025 avec Arthur MASUAKU comme si vous y étiez.</h3>-->

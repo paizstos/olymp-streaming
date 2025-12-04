@@ -1,0 +1,45 @@
+<%- include('../layout', { body: `
+<section class="payment-container">
+  <div class="payment-header">
+    <h2>Choisis ton abonnement</h2>
+    <p>Simulation de paiement – intégration IllicoCash et RAWBANK à venir.</p>
+  </div>
+
+  <form method="POST" action="/payment/subscribe" class="plans-grid">
+    <label class="plan-card">
+      <input type="radio" name="plan" value="daily" checked>
+      <div class="plan-body">
+        <h3>Basic Jour</h3>
+        <p class="plan-price">0,99 $ <span>/ jour</span></p>
+        <p class="plan-text">Parfait pour suivre un match ou une journée clé.</p>
+        <ul class="plan-list">
+          <li>Accès illimité à tous les lives pendant 24h</li>
+          <li>Rediffusions des matchs du jour</li>
+        </ul>
+      </div>
+    </label>
+
+    <label class="plan-card plan-card-highlight">
+      <input type="radio" name="plan" value="quarter">
+      <div class="plan-body">
+        <h3>Pass CAN</h3>
+        <p class="plan-price">5,99 $ <span>/ 3 mois</span></p>
+        <p class="plan-text">Toute la compétition, du coup d’envoi à la finale.</p>
+        <ul class="plan-list">
+          <li>Accès complet à tous les lives</li>
+          <li>Docs exclusifs “Dans la peau d’un Léopard”</li>
+          <li>Débriefs quotidiens et coulisses</li>
+        </ul>
+      </div>
+    </label>
+
+    <button class="btn btn-primary btn-full payment-submit" type="submit">
+      Valider (paiement simulé)
+    </button>
+  </form>
+
+  <p class="payment-note">
+    Le paiement réel via IllicoCash / Rawbank sera intégré plus tard.
+  </p>
+</section>
+` }) %>
