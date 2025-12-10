@@ -2,9 +2,16 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#021528">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>OLYMP Streaming – CAN 2025</title>
+  <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="icon" href="/images/logo_total-rm.png" type="image/png">
+  <link rel="apple-touch-icon" href="/images/logo_simple_192.png">
+  <link rel="icon" href="/images/logo_simple_192.png" type="image/png">
+  <script src="/js/pwa-register.js" defer></script>
+  <script src="/js/pwa-install.js" defer></script>
 </head>
 <body>
   <%- include('partials/navbar') %>
@@ -14,7 +21,37 @@
     <%- include('partials/goalOverlay') %>
   <script src="/js/goalOverlay.js"></script>
   </main>
+  <div class="pwa-download-card">
+    <div class="pwa-download-card__logo">
+      <img src="/images/logo_simple_192.png" alt="OLYMP">
+    </div>
+    <div class="pwa-download-card__content">
+      <p class="pwa-download-card__title">OLYMP sur ton appareil</p>
+      <p class="pwa-download-card__text">Installe l’app pour un accès rapide (Android, iOS, Desktop).</p>
+    </div>
+    <div class="pwa-download-card__actions">
+      <button id="pwaInstallBtn" class="btn-store btn-store--android" type="button" style="display:none;">
+        <span class="btn-store__logo">🤖</span>
+        <span class="btn-store__content">
+          <span class="btn-store__label">Installer</span>
+          <span class="btn-store__brand">Android PWA</span>
+        </span>
+      </button>
+      <a class="btn-store btn-store--ios" href="/manifest.webmanifest" download>
+        <span class="btn-store__logo"></span>
+        <span class="btn-store__content">
+          <span class="btn-store__label">Ajouter</span>
+          <span class="btn-store__brand">iOS / iPadOS</span>
+        </span>
+      </a>
+      <a class="btn-store btn-store--desktop" href="/manifest.webmanifest" download>
+        <span class="btn-store__logo">⊞</span>
+        <span class="btn-store__content">
+          <span class="btn-store__label">Installer</span>
+          <span class="btn-store__brand">Desktop</span>
+        </span>
+      </a>
+    </div>
+  </div>
 </body>
 </html>
-
-

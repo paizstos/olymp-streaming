@@ -1,0 +1,24 @@
+{
+  "name": "OLYMP Streaming – CAN 2025",
+  "short_name": "OLYMP",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#021528",
+  "theme_color": "#021528",
+  "icons": [
+    {
+      "src": "/images/logo_simple_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/logo_simple_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
