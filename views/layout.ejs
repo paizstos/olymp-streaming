@@ -4,13 +4,17 @@
   <meta charset="UTF-8">
   <title>OLYMP Streaming – CAN 2025</title>
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="icon" type="image/x-icon" href="/images/logo_total.PNG">
+  <link rel="icon" href="/images/logo_total-rm.png" type="image/png">
 </head>
 <body>
   <%- include('partials/navbar') %>
   <main class="page-wrapper">
     <%- include('partials/flash') %>
     <%- body %>
+    <%- include('partials/goalOverlay') %>
+  <script src="/js/goalOverlay.js"></script>
   </main>
 </body>
 </html>
+
+

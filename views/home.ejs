@@ -2,88 +2,730 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>OLYMP Streaming – CAN 2025</title>
+  <title>OLYMP – CAN 2025 en streaming</title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/images/logo_total-rm.png" type="image/png">
 </head>
 <body>
   <%- include('partials/navbar') %>
 
-  <main class="page-wrapper hero-wrapper">
+  <main class="page-wrapper home-landing">
     <%- include('partials/flash') %>
 
-    <section class="hero hero-with-video">
+    <!-- HERO CINÉMA -->
+    <section class="hero-cinema">
       <!-- Vidéo de fond -->
-      <div class="hero-video-bg">
+      <div class="hero-cinema-bg">
         <video
           id="heroBgVideo"
-          class="hero-bg-video-element"
+          class="hero-cinema-bg-video"
           autoplay
           muted
           loop
           playsinline
         >
-          <source src="/videos/video_masuaku2.mp4" type="video/mp4">
-          Votre navigateur ne supporte pas la vidéo HTML5.
+          <!-- première source remplie par JS -->
+          <source id="heroBgSource" src="" type="video/mp4">
         </video>
-        <div class="hero-video-overlay"></div>
+        <div class="hero-cinema-overlay"></div>
       </div>
 
-      <!-- Contenu au-dessus de la vidéo -->
-      <div class="hero-content">
-        <div class="hero-text">
-          <h1>Vivez la CAN Maroc 2025 avec <span class="masuaku">Arthur MASUAKU</span> comme si vous y étiez.</h1>
-          <p>
-            Débriefs exclusifs, lives, coulisses des Léopards et contenus
-            tournés par notre influenceur star, rien que pour la communauté OLYMP.
-          </p>
-
-          <div class="hero-actions">
-            <a href="/register" class="btn btn-primary">Commencer mon abonnement</a>
-            <a href="/login" class="btn btn-ghost">J’ai déjà un compte</a>
-          </div>
-
-          <!--<div class="hero-badges">
-            <span class="badge">0,99 $ / jour</span>
-            <span class="badge badge-outline">5,99 $ / 3 mois</span>
-          </div>-->
+      <div class="hero-cinema-inner">
+        <div class="hero-cinema-topbar">
+          <span class="hero-pill-live">En direct CAN 2025</span>
+          <span class="hero-pill-small">OLYMP · Streaming officiel (maquette)</span>
         </div>
 
-        <!-- Carte focus influenceur -->
-        <div class="hero-influencer-card" id="heroInfluencerCard">
-          <div class="hero-influencer-avatar">
-            <!-- Tu peux mettre une vraie image ici -->
-            <div class="hero-influencer-avatar-inner"></div>
+        <div class="hero-cinema-grid">
+          <div class="hero-cinema-main">
+            <p class="hero-cinema-kicker">OLYMP ORIGINAL</p>
+            <h1 id="heroTitle">Titre de la vidéo</h1>
+            <p id="heroDescription" class="hero-cinema-desc">
+              Description de la vidéo sélectionnée.
+            </p>
+
+            <div class="hero-cinema-meta">
+              <span id="heroTag" class="hero-tag">Talk show</span>
+              <span id="heroMatchInfo" class="hero-match-info">RDC vs Maroc · Teaser</span>
+            </div>
+
+            <div class="hero-cinema-actions">
+              <a id="heroWatchBtn" href="#" class="btn btn-primary hero-watch-btn">
+                ▶ Regarder le match
+              </a>
+              <button id="heroExtractBtn" type="button" class="btn btn-ghost hero-extract-btn">
+                Voir l’extrait
+              </button>
+            </div>
           </div>
-          <div class="hero-influencer-texts">
-            <p class="hero-influencer-label">Extrait exclusif</p>
-            <p class="hero-influencer-title">“Dans la peau d’un Léopard”</p>
-            <p class="hero-influencer-subtitle">avec Arthur MASUAKU</p>
+
+          <div class="hero-cinema-side">
+            <div class="hero-cinema-badge">
+              <span>Optimisé pour</span>
+              <strong>Fans des Léopards</strong>
+            </div>
+            <p class="hero-cinema-side-text">
+              Lives, débriefs, coulisses : ta CAN Maroc 2025, racontée par ton influenceur star,
+              en une seule plateforme.
+            </p>
+          </div></br>
+        </div>
+
+        <!-- Carrousel de vidéos en bas -->
+        <div class="hero-carousel-wrapper">
+          <div class="hero-carousel-header">
+            <h2>En ce moment sur OLYMP</h2>
+            <p>5 secondes par extrait. Si tu vibres, tu t’abonnes.</p>
+          </div> </br>
+
+          <div class="hero-carousel" id="heroCarousel">
+            <% const items = ( typeof featuredVideos !== 'undefined' && featuredVideos && featuredVideos.length
+        ? featuredVideos
+        :[
+              {
+                id: 1,
+                title: "Débrief Léopards – RDC vs Ethiopie",
+                description: "Analyse à chaud avec notre influenceur star.",
+                videoUrl: "/videos/test3.mp4",
+                thumbnailUrl: "https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg",
+                tag: "Débrief",
+                matchInfo: "RDC 2 – 1 Maroc"
+              },
+              {
+                id: 2,
+                title: "La CAN 2025 avec Arthur MASUAKU !",
+                description: "Ce que les caméras classiques ne te montrent pas.",
+                videoUrl: "/videos/video_masuaku2.mp4",
+                thumbnailUrl: "https://images.pexels.com/photos/399187/pexels-photo-399187.jpeg",
+                tag: "Coulisses",
+                matchInfo: "Inside Léopards"
+              },
+              {
+                id: 3,
+                title: "Parole aux fans – Kinshasa",
+                description: "Micro-trottoir à chaud après le match.",
+                videoUrl: "/videos/test4.mp4",
+                thumbnailUrl: "https://images.pexels.com/photos/799091/pexels-photo-799091.jpeg",
+                tag: "Fans",
+                matchInfo: "Ambiance 243"
+              },
+              {
+                id: 4,
+                title: "Tactique vue du salon",
+                description: "Décryptage posé, comme si tu étais avec lui.",
+                videoUrl: "/videos/test2.mp4",
+                thumbnailUrl: "https://images.pexels.com/photos/848613/pexels-photo-848613.jpeg",
+                tag: "Analyse",
+                matchInfo: "Board tactique"
+              }
+            ]); %>
+
+            <% items.forEach((v, index) => { %>
+              <article
+                class="hero-carousel-item <%= index === 0 ? 'active' : '' %>"
+                data-video-url="<%= v.videoUrl %>"
+                data-title="<%= v.title %>"
+                data-description="<%= v.description %>"
+                data-tag="<%= v.tag %>"
+                data-match-info="<%= v.matchInfo %>"
+                data-video-id="<%= v.id %>"
+              >
+                <div class="hero-carousel-thumb"
+                     style="background-image:url('<%= v.thumbnailUrl %>')">
+                  <div class="hero-carousel-thumb-overlay"></div>
+                  <button type="button" class="hero-carousel-play">▶</button>
+                </div>
+                <h3 class="hero-carousel-title"><%= v.title %></h3>
+              </article>
+            <% }) %>
           </div>
-          <button type="button" class="hero-influencer-play" id="heroPlayBtn">
-            ▶ Voir le teaser
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION SCORES / CLASSEMENT LÉOPARDS -->
+    <section class="leopards-stats-section" id="leopardsStats">
+      <div class="leopards-stats-inner">
+        <header class="leopards-stats-header">
+          <div>
+            <p class="leopards-kicker">Résultats récents</p>
+            <h2 style="color: rgb(11, 18, 7)">Les derniers matchs des Léopards</h2>
+            <p class="leopards-subtitle">
+              Exemple de tableau. Plus tard, tu pourras remplir ça avec l’API de scores.
+            </p>
+          </div>
+          <a href="/extraits" class="btn btn-ghost btn-small">
+            Voir les extraits gratuits
+          </a>
+        </header>
+
+        <div class="leopards-last-results">
+          <div class="leopards-score-card">
+            <p class="leopards-score-date">12 juillet 2025</p>
+            <p class="leopards-score-main">
+              <span>RDC</span>
+              <strong>3 – 1</strong>
+              <span>Maroc</span>
+            </p>
+            <p class="leopards-score-label">Match amical</p>
+          </div>
+          <div class="leopards-score-card">
+            <p class="leopards-score-date">8 juillet 2025</p>
+            <p class="leopards-score-main">
+              <span>RDC</span>
+              <strong>1 – 1</strong>
+              <span>Nigeria</span>
+            </p>
+            <p class="leopards-score-label">CAN · Phase de poule</p>
+          </div>
+          <div class="leopards-score-card">
+            <p class="leopards-score-date">4 juillet 2025</p>
+            <p class="leopards-score-main">
+              <span>RDC</span>
+              <strong>2 – 3</strong>
+              <span>Sénégal</span>
+            </p>
+            <p class="leopards-score-label">CAN · Quart de finale</p>
+          </div>
+        </div>
+
+        <div class="leopards-table-wrapper">
+          <h3 class="leopards-table-title">Classement (exemple de groupe)</h3>
+          <table class="leopards-table">
+            <thead>
+              <tr>
+                <th>POS</th>
+                <th>ÉQUIPE</th>
+                <th>MJ</th>
+                <th>V</th>
+                <th>N</th>
+                <th>D</th>
+                <th>BP</th>
+                <th>BC</th>
+                <th>DIFF</th>
+                <th>PTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td><td>RDC</td><td>3</td><td>2</td><td>1</td><td>0</td><td>7</td><td>3</td><td>+4</td><td>7</td>
+              </tr>
+              <tr>
+                <td>2</td><td>Maroc</td><td>3</td><td>2</td><td>0</td><td>1</td><td>5</td><td>3</td><td>+2</td><td>6</td>
+              </tr>
+              <tr>
+                <td>3</td><td>Nigeria</td><td>3</td><td>1</td><td>1</td><td>1</td><td>3</td><td>3</td><td>0</td><td>4</td>
+              </tr>
+              <tr>
+                <td>4</td><td>Sénégal</td><td>3</td><td>0</td><td>0</td><td>3</td><td>2</td><td>8</td><td>-6</td><td>0</td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn btn-primary leopards-table-cta">
+            Voir les stats complètes (plus tard)
           </button>
         </div>
       </div>
     </section>
 
-    <!-- Modal vidéo au premier plan -->
-    <div class="hero-video-modal" id="heroVideoModal">
-      <div class="hero-video-modal-backdrop" id="heroVideoBackdrop"></div>
-      <div class="hero-video-modal-inner">
-        <button class="hero-video-modal-close" id="heroVideoCloseBtn" type="button">✕</button>
-        <video
-          id="heroMainVideo"
-          class="hero-main-video-element"
-          controls
-          autoplay
-        >
-          <source src="/videos/video_masuaku2.mp4" type="video/mp4">
-          Votre navigateur ne supporte pas la vidéo HTML5.
+    <!-- Modal pour "Voir l'extrait" -->
+    <div class="hero-extract-modal" id="heroExtractModal">
+      <div class="hero-extract-backdrop" id="heroExtractBackdrop"></div>
+      <div class="hero-extract-inner">
+        <button class="hero-extract-close" id="heroExtractClose" type="button">✕</button>
+        <video id="heroExtractVideo" class="hero-extract-video" controls autoplay>
+          <source id="heroExtractSource" src="" type="video/mp4">
         </video>
       </div>
     </div>
   </main>
 
-  <script src="/js/homeHero.js"></script>
+  <script src="/js/homeLanding.js"></script>
+  <style>
+    .home-landing {
+  padding-top: 0;
+}
+
+/* HERO CINÉMA */
+
+.hero-cinema {
+  position: relative;
+  min-height: calc(100vh - 72px);
+  border-radius: 24px;
+  overflow: hidden;
+  margin-top: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.hero-cinema-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hero-cinema-bg-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.2) contrast(1.1) brightness(0.9);
+}
+
+.hero-cinema-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(2, 15, 35, 0.9), rgba(2, 15, 35, 0.45), rgba(2, 15, 35, 0.95)),
+    radial-gradient(circle at bottom, rgba(0, 0, 0, 0.45), transparent 60%);
+}
+
+.hero-cinema-inner {
+  position: relative;
+  z-index: 1;
+  padding: 24px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.hero-cinema-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.hero-pill-live {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(232, 65, 65, 0.25);
+  border: 1px solid rgba(232, 65, 65, 0.8);
+  color: #ffd1d1;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.hero-pill-small {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+}
+
+.hero-cinema-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.9fr);
+  gap: 28px;
+  align-items: center;
+}
+
+.hero-cinema-kicker {
+  margin: 0 0 6px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+}
+
+.hero-cinema-main h1 {
+  margin: 0 0 8px;
+  font-size: clamp(32px, 3.5vw, 40px);
+}
+
+.hero-cinema-desc {
+  margin: 0 0 10px;
+  max-width: 540px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.hero-cinema-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hero-tag {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 11px;
+}
+
+.hero-match-info {
+  font-size: 12px;
+  color: #9ae6b4;
+}
+
+.hero-cinema-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.hero-watch-btn {
+  min-width: 160px;
+}
+
+.hero-extract-btn {
+  min-width: 140px;
+}
+
+.hero-cinema-side {
+  align-self: flex-start;
+  text-align: right;
+}
+
+.hero-cinema-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(1, 181, 116, 0.14);
+  border: 1px solid rgba(1, 181, 116, 0.7);
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+.hero-cinema-side-text {
+  margin: 0;
+  font-size: 13px;
+  max-width: 260px;
+  margin-left: auto;
+  color: var(--text-muted);
+}
+
+/* CARROUSEL */
+
+.hero-carousel-wrapper {
+  margin-top: auto;
+}
+
+.hero-carousel-header h2 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.hero-carousel-header p {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.hero-carousel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(160px, 200px);
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.hero-carousel::-webkit-scrollbar {
+  height: 4px;
+}
+.hero-carousel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+.hero-carousel-item {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+  border: 1px solid transparent;
+  padding: 4px 4px 8px;
+  cursor: pointer;
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border 0.18s ease-out, background 0.18s;
+}
+
+.hero-carousel-item.active {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+  border-color: rgba(1, 181, 116, 0.8);
+  background: radial-gradient(circle at top, rgba(1, 181, 116, 0.16), rgba(0, 0, 0, 0.5));
+}
+
+.hero-carousel-thumb {
+  position: relative;
+  padding-top: 145%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.hero-carousel-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 25%, rgba(0, 0, 0, 0.7));
+  opacity: 0;
+  transition: opacity 0.18s ease-out;
+}
+
+.hero-carousel-item:hover .hero-carousel-thumb-overlay {
+  opacity: 1;
+}
+
+.hero-carousel-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(1, 181, 116, 0.9);
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-carousel-title {
+  margin: 6px 4px 0;
+  font-size: 12px;
+}
+
+/* Modal "Voir l’extrait" */
+
+.hero-extract-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-extract-modal.open {
+  display: flex;
+}
+
+.hero-extract-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.hero-extract-inner {
+  position: relative;
+  z-index: 1;
+  width: min(900px, 94vw);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.85);
+  background: #020814;
+}
+
+.hero-extract-video {
+  width: 100%;
+  display: block;
+}
+
+.hero-extract-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(3, 18, 40, 0.9);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .hero-cinema {
+    border-radius: 0;
+    margin-top: 0;
+  }
+
+  .hero-cinema-inner {
+    padding: 16px 12px 16px;
+  }
+
+  .hero-cinema-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .hero-cinema-side {
+    text-align: left;
+  }
+
+  .hero-cinema-badge {
+    align-items: flex-start;
+  }
+}
+
+
+/* =============== Stats + Animations =============*/
+.leopards-stats-section {
+  margin-top: 26px;
+  padding: 26px 0 40px;
+  /*background: linear-gradient(to bottom, #020916, #020814);*/
+  background-color: #ffffff;
+  border-radius: 24px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.leopards-stats-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.leopards-stats-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.leopards-stats-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-end;
+  margin-bottom: 18px;
+}
+
+.leopards-kicker {
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+}
+
+.leopards-stats-header h2 {
+  margin: 0 0 4px;
+}
+
+.leopards-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.leopards-last-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+  
+}
+
+.leopards-score-card {
+  background: #ffffff;
+  color: #111827;
+  border-radius: 14px;
+  padding: 8px 10px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  font-size: 12px;
+}
+
+.leopards-score-date {
+  margin: 0 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+  color: #6b7280;
+}
+
+.leopards-score-main {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 13px;
+}
+
+.leopards-score-main strong {
+  font-size: 18px;
+}
+
+.leopards-score-label {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.leopards-table-wrapper {
+  margin-top: 6px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 10px 10px 12px;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.22);
+  color: #111827;
+}
+
+.leopards-table-title {
+  margin: 0 0 6px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ef4444;
+}
+
+.leopards-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.leopards-table thead {
+  background: #f9fafb;
+}
+
+.leopards-table th,
+.leopards-table td {
+  padding: 4px 6px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.leopards-table th:first-child,
+.leopards-table td:first-child {
+  text-align: left;
+}
+
+.leopards-table th:nth-child(2),
+.leopards-table td:nth-child(2) {
+  text-align: left;
+}
+
+.leopards-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.leopards-table-cta {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* Responsive stats */
+
+@media (max-width: 900px) {
+  .leopards-stats-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .leopards-table {
+    font-size: 11px;
+  }
+}
+
+  </style>
 </body>
 </html>

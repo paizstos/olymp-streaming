@@ -1392,3 +1392,179 @@ a {
     0 0 10px gold,
     0 0 20px red;
 }
+
+/* ========================  GOAL OVERLAY ===================== */
+.goal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease-out;
+  background:
+    radial-gradient(circle at center, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.97));
+}
+
+.goal-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.goal-overlay-inner {
+  text-align: center;
+  animation: goalPopIn 0.4s ease-out, goalPulse 1.2s ease-in-out infinite alternate;
+}
+
+.goal-flag-strip {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.flag-block {
+  width: 60px;
+  height: 14px;
+}
+
+.flag-block.blue {
+  background: #0072ce;
+}
+.flag-block.red {
+  background: #d21034;
+}
+.flag-block.yellow {
+  background: #fcd116;
+}
+
+.goal-label {
+  margin: 0 0 4px;
+  font-size: 13px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.goal-title {
+  margin: 0 0 4px;
+  font-size: clamp(40px, 5vw, 56px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: linear-gradient(120deg, #fcd116, #ffffff, #01b574);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.goal-subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+@keyframes goalPopIn {
+  from {
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes goalPulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.04);
+  }
+}
+
+@media (max-width: 768px) {
+  .goal-title {
+    font-size: 36px;
+  }
+}
+
+
+
+/*====================== IFRAME ========================*/
+/* ✅ CONTENEUR PRINCIPAL DU PLAYER */
+.video-player-wrapper {
+  width: 100%;
+  max-width: 1100px;        /* largeur max PRO */
+  margin: 0 auto 30px;     /* centré */
+  padding: 14px;
+  border-radius: 26px;
+  background: radial-gradient(circle at top, #0b1e3d, #020816);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 25px 60px rgba(0,0,0,0.9);
+}
+
+/* ✅ FORMAT CINÉMA RESPONSIVE */
+.video-aspect {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* ✅ MAGIQUE */
+  overflow: hidden;
+  border-radius: 20px;
+  background: #000;
+}
+
+/* ✅ L’IFRAME PREND TOUTE LA PLACE */
+.video-aspect iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ✅ MOBILE */
+@media (max-width: 768px) {
+  .video-player-wrapper {
+    padding: 8px;
+    border-radius: 18px;
+  }
+
+  .video-aspect {
+    border-radius: 14px;
+  }
+}
+
+/*========================== logo  sur thumbnails =========================*/
+
+
+/* ✅ Logo OLYMP en overlay 
+.thumb-logo {
+  position: absolute;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: radial-gradient(circle at top, rgba(0, 0, 0, 0.7), rgba(1, 8, 20, 0.95));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(8px);
+}*/
+
+/*.thumb-logo img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}*/
+
+.thumb-logo img{
+  height: 25px;
+  width: auto;
+  z-index: 99999;
+}
+
+

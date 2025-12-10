@@ -24,10 +24,13 @@
 
         <% videos.forEach(video => { %>
           <a href="/videos/<%= video.id %>" class="video-card">
-            <div class="video-thumb" style="background-image:url('<%= video.thumbnailUrl || "" %>')">
+            <div class="video-thumb" style="background-image:url('<%= video?.thumbnailUrl %>')">
               <% if (video.isLive) { %>
-                <span class="live-badge">STREAM</span>
+                <span class="live-badge">STREAM EN DIRECT</span>
               <% } %>
+              <div class="thumb-logo">
+                <img src="/images/logo_olymp_blanc.png" alt="OLYMP Digital Media">
+              </div>
             </div>
             <div class="video-info">
               <h3><%= video.title %></h3>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>OLYMP Streaming – CAN 2025</title>
+  <link rel="stylesheet" href="/css/style.css">
+  
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <main class="page-wrapper hero-wrapper">
+    <%- include('partials/flash') %>
+
+    <section class="hero hero-with-video">
+      <!-- Vidéo de fond -->
+      <div class="hero-video-bg">
+        <video
+          id="heroBgVideo"
+          class="hero-bg-video-element"
+          autoplay
+          muted
+          loop
+          playsinline
+        >
+          <source src="/videos/video_masuaku2.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la vidéo HTML5.
+        </video>
+        <div class="hero-video-overlay"></div>
+      </div>
+
+      <!-- Contenu au-dessus de la vidéo -->
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Vivez la CAN Maroc 2025 avec <span class="masuaku">Arthur MASUAKU</span> comme si vous y étiez.</h1>
+          <p>
+            Débriefs exclusifs, lives, coulisses des Léopards et contenus
+            tournés par notre influenceur star, rien que pour la communauté OLYMP.
+          </p>
+
+          <div class="hero-actions">
+            <a href="/register" class="btn btn-primary">Commencer mon abonnement</a>
+            <a href="/login" class="btn btn-ghost">J’ai déjà un compte</a>
+          </div>
+
+          <!--<div class="hero-badges">
+            <span class="badge">0,99 $ / jour</span>
+            <span class="badge badge-outline">5,99 $ / 3 mois</span>
+          </div>-->
+        </div>
+
+        <!-- Carte focus influenceur -->
+        <div class="hero-influencer-card" id="heroInfluencerCard">
+          <div class="hero-influencer-avatar">
+            <!-- Tu peux mettre une vraie image ici -->
+            <div class="hero-influencer-avatar-inner"></div>
+          </div>
+          <div class="hero-influencer-texts">
+            <p class="hero-influencer-label">Extrait exclusif</p>
+            <p class="hero-influencer-title">“Dans la peau d’un Léopard”</p>
+            <p class="hero-influencer-subtitle">avec Arthur MASUAKU</p>
+          </div>
+          <button type="button" class="hero-influencer-play" id="heroPlayBtn">
+            ▶ Voir le teaser
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal vidéo au premier plan -->
+    <div class="hero-video-modal" id="heroVideoModal">
+      <div class="hero-video-modal-backdrop" id="heroVideoBackdrop"></div>
+      <div class="hero-video-modal-inner">
+        <button class="hero-video-modal-close" id="heroVideoCloseBtn" type="button">✕</button>
+        <video
+          id="heroMainVideo"
+          class="hero-main-video-element"
+          controls
+          autoplay
+        >
+          <source src="/videos/video_masuaku2.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la vidéo HTML5.
+        </video>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/homeHero.js"></script>
+</body>
+</html>

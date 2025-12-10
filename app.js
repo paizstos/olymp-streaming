@@ -52,6 +52,31 @@ app.get('/', (req, res) => {
   res.render('home');
 });
 
+/* ==================== GOAL ANIM ROUTES ===================== */
+// ---- GESTION SIMPLE DU "GOAL RDC" EN MÉMOIRE ----
+let goalRdcFlag = false;
+
+// Endpoint ADMIN pour déclencher un but (à appeler à la main pour l'instant)
+app.post('/admin/goal-rdc', (req, res) => {
+  goalRdcFlag = true;
+  console.log('⚽ GOAL RDC déclenché (flag = true)');
+  res.sendStatus(204);
+});
+
+// Endpoint API appelé par le front toutes les X secondes
+app.get('/api/goal-rdc', (req, res) => {
+  if (goalRdcFlag) {
+    // on reset le flag, comme ça le but n’est annoncé qu’une fois
+    goalRdcFlag = false;
+    return res.json({
+      goal: true,
+      team: 'RDC',
+      message: 'But pour les Léopards !'
+    });
+  }
+  res.json({ goal: false });
+});
+
 // Sync DB puis start
 sequelize
   .sync()

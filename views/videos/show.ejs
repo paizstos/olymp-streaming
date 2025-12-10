@@ -14,27 +14,23 @@
     <main class="page-wrapper video-main">
       <%- include('../partials/flash') %>
 
-      <section class="video-page">
-        <div class="video-layout">
-          <div class="video-player-card">
-            <% if (video.isLive) { %>
+
+<div class="video-player-wrapper">
+    <% if (video.isLive) { %>
               <span class="live-badge large">STREAM EN DIRECT</span>
             <% } %>
+  <div class="video-aspect">
+    <iframe
+      src="https://player.vimeo.com/video/<%= video.id %>?autoplay=1&title=0&byline=0&portrait=0"
+      frameborder="0"
+      allow="autoplay; fullscreen; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+<%- include('../partials/pub') %>
 
-            <div class="player-wrapper">
-              <video controls poster="<%= video.thumbnailUrl || '' %>">
-                <source src="<%= video.videoUrl %>" type="video/mp4">
-                Votre navigateur ne supporte pas la lecture vidéo.
-              </video>
-            </div>
 
-            <h2 class="video-title"><%= video.title %></h2>
-            <p class="video-desc"><%= video.description || "" %></p>
-          </div>
-
-          <%- include('../partials/pub') %>
-        </div>
-      </section>
     </main>
   </div>
 
