@@ -20,12 +20,25 @@
               <span class="live-badge large">STREAM EN DIRECT</span>
             <% } %>
   <div class="video-aspect">
-    <iframe
-      src="https://player.vimeo.com/video/<%= video.id %>?autoplay=1&title=0&byline=0&portrait=0"
-      frameborder="0"
-      allow="autoplay; fullscreen; picture-in-picture"
-      allowfullscreen>
-    </iframe>
+    <% if (video.videoFileUrl) { %>
+      <video
+        controls
+        playsinline
+        autoplay
+        poster="<%= video.thumbnailUrl %>"
+        style="width:100%; height:100%; object-fit:cover; background:#000; border-radius:12px;"
+      >
+        <source src="<%= video.videoFileUrl %>" type="video/mp4">
+        Votre navigateur ne supporte pas la lecture vidéo HTML5.
+      </video>
+    <% } else { %>
+      <iframe
+        src="<%= video.embedUrl %>"
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    <% } %>
   </div>
 </div>
 <%- include('../partials/pub') %>

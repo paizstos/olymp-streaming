@@ -12,8 +12,10 @@
   <link rel="icon" href="/images/logo_simple_192.png" type="image/png">
   <script src="/js/pwa-register.js" defer></script>
   <script src="/js/pwa-install.js" defer></script>
+  <script src="/js/ui-enhance.js" defer></script>
 </head>
 <body>
+  <div id="scrollProgress" class="scroll-progress"></div>
   <%- include('partials/navbar') %>
   <main class="page-wrapper">
     <%- include('partials/flash') %>
@@ -53,5 +55,6 @@
       </a>
     </div>
   </div>
+  <button id="backToTop" class="back-to-top" type="button" aria-label="Remonter">↑</button>
 </body>
 </html>

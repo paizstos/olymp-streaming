@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentIndex = 0;
   let rotationTimer = null;
+  const heroCarousel = document.getElementById('heroCarousel');
 
   if (!carouselItems.length) return;
 
@@ -81,6 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
       startRotation();
     });
   });
+
+  // Pause la rotation au survol du carrousel pour laisser le temps de lire
+  if (heroCarousel) {
+    heroCarousel.addEventListener('mouseenter', stopRotation);
+    heroCarousel.addEventListener('mouseleave', startRotation);
+  }
 
   // Bouton "Voir l’extrait"
   if (heroExtractBtn && extractModal && extractVideo && extractSource) {

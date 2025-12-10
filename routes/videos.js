@@ -138,6 +138,16 @@ router.get('/:id', async (req, res) => {
         videoFileUrl = progressive.link || '';
       }
 
+      // URL d’embed (préférence : player_embed_url de l’API, sinon extraction du HTML d’embed, sinon fallback simple)
+      let embedUrl = v.player_embed_url || '';
+      if (!embedUrl && v.embed && v.embed.html) {
+        const match = v.embed.html.match(/src="([^"]+)"/);
+        if (match && match[1]) embedUrl = match[1];
+      }
+      if (!embedUrl) {
+        embedUrl = `https://player.vimeo.com/video/${videoId}?title=0&byline=0&portrait=0&dnt=1`;
+      }
+
       const isLive = v.live && v.live.status === 'streaming';
       console.log("thumbnailurl: ", thumbnailUrl, " isLive: ", isLive);
 
@@ -147,6 +157,8 @@ router.get('/:id', async (req, res) => {
         description: v.description || '',
         thumbnailUrl: thumbnailUrl || "/images/logo_olymp_blanc.png",
         videoUrl: videoFileUrl || v.link,
+        videoFileUrl,
+        embedUrl,
         vimeoPageUrl: v.link,
         isLive  // tu pourras détecter ça via tes propres métadonnées ou dossiers "live"
       };

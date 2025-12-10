@@ -42,6 +42,18 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/', authRoutes);
+
+// Protection : toute page nécessite une session utilisateur
+const requireAuth = (req, res, next) => {
+  const isHome = req.path === '/';
+  const isExtraits = req.path === '/extraits' || req.path.startsWith('/extraits/');
+  if (isHome || isExtraits) return next();
+  if (req.session.user) return next();
+  return res.redirect('/login');
+};
+
+app.use(requireAuth);
+
 app.use('/payment', paymentRoutes);
 app.use('/videos', videosRoutes);
 app.use('/api/scores', scoresRoutes);
