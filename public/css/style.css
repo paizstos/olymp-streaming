@@ -1567,4 +1567,108 @@ a {
   z-index: 99999;
 }
 
+/* ===================== Global mobile tweaks ===================== */
+@media (max-width: 600px) {
+  .page-wrapper {
+    padding: 16px 14px 28px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .navbar-right {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav-link,
+  .nav-btn {
+    font-size: 13px;
+    padding: 7px 12px;
+  }
+
+  .nav-username {
+    margin-right: 0;
+  }
+
+  .hero,
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .hero-with-video {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .extraits-hero {
+    padding: 14px;
+  }
+
+  .extraits-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .extraits-cta .btn {
+    width: 100%;
+  }
+
+  .extraits-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .videos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .video-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .video-player-card {
+    padding: 12px;
+  }
+
+  .ad-card {
+    order: 2;
+  }
+
+  .auth-container {
+    padding: 24px 14px 0;
+  }
+
+  .payment-container {
+    padding: 0 14px;
+  }
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scores-sidebar {
+    width: 100%;
+    position: static;
+    box-shadow: none;
+  }
+
+  .page-wrapper .flash {
+    width: 100%;
+  }
+}
 
