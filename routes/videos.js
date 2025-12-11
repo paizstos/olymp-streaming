@@ -26,8 +26,8 @@ router.get('/:id', ensureActiveSubscription, async (req, res) => {
 
 //============================= VIMEO =================================
 
-// GET /videos – liste toutes les vidéos venant de Vimeo
-router.get('/', async (req, res) => {
+// GET /videos – liste toutes les vidéos venant de Vimeo (protégé par abonnement actif)
+router.get('/', ensureActiveSubscription, async (req, res) => {
   try {
     // Exemple : on récupère les vidéos de ton compte
     // "/me/videos" = les vidéos du propriétaire du token
@@ -107,7 +107,7 @@ router.get('/', async (req, res) => {
 });
 
 // Optionnel : page /videos/:id qui affiche une vidéo spécifique Vimeo
-router.get('/:id', async (req, res) => {
+router.get('/:id', ensureActiveSubscription, async (req, res) => {
   const videoId = req.params.id;
 
   vimeoClient.request(

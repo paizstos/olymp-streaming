@@ -1,0 +1,72 @@
+<section class="account-hero enhanced">
+  <div>
+    <p class="kicker">Mon compte</p>
+    <h1>Profil et accès</h1>
+    <p class="lead">Mets à jour tes infos, avatar, et vérifie tes accès.</p>
+  </div>
+  <div class="account-status status-pill">
+    <span class="status-dot"></span> Connecté
+  </div>
+</section>
+
+<section class="account-grid enhanced">
+  <form class="account-card account-card--wide" method="POST" action="/account" enctype="multipart/form-data">
+    <div class="form-two-cols">
+      <label>Prénom
+        <input type="text" name="firstName" value="<%= user.firstName || '' %>">
+      </label>
+      <label>Nom
+        <input type="text" name="lastName" value="<%= user.lastName || '' %>">
+      </label>
+    </div>
+    <label>Email (lecture seule)
+      <input type="email" value="<%= user.email %>" disabled>
+    </label>
+    <div class="form-two-cols">
+      <label>Pays
+        <input type="text" name="country" value="<%= user.country || '' %>">
+      </label>
+      <label>Date de naissance
+        <input type="date" name="birthDate" value="<%= user.birthDate || '' %>">
+      </label>
+    </div>
+    <input type="hidden" name="avatarUrl" id="avatarUrl" value="<%= user.avatarUrl || '' %>">
+
+    <div class="upload-block">
+      <div>
+        <p class="upload-title">Photo de profil</p>
+        <p class="upload-text">Upload ou colle un lien. Formats jpg/png, aperçu instantané.</p>
+        <div class="upload-actions">
+          <label class="btn btn-ghost btn-small">
+            Choisir un fichier
+            <input type="file" id="avatarFile" accept="image/*" hidden>
+          </label>
+          <label class="btn btn-outline btn-small">
+            Coller un lien
+            <input type="url" id="avatarInput" placeholder="https://..." value="<%= user.avatarUrl || '' %>" class="input-inline">
+          </label>
+        </div>
+      </div>
+      <div class="upload-preview" id="avatarPreview" style="background-image:url('<%= user.avatarUrl || '/images/logo_simple_192.png' %>')"></div>
+    </div>
+
+    <button class="btn btn-primary btn-full" type="submit">Enregistrer</button>
+  </form>
+
+  <div class="account-side enhanced">
+    <div class="card">
+      <h3>Abonnement</h3>
+      <p>Gère ton offre et tes moyens de paiement.</p>
+      <a class="btn btn-ghost" href="/payment/choose">Accéder à mon abonnement</a>
+    </div>
+    <div class="card">
+      <h3>Support</h3>
+      <p>Pour tout problème de compte ou de paiement.</p>
+      <p class="mini-list">
+        <span>support@olympdm.com</span><br>
+        <span>team@olympdm.com</span>
+      </p>
+    </div>
+  </div>
+</section>
+<script src="/js/account.js"></script>

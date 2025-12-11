@@ -1,0 +1,71 @@
+<%- include('../layout', { body: `
+<section class="contact-hero">
+  <div>
+    <p class="kicker">Une idée ? Un partenariat ?</p>
+    <h1>Contacte l’équipe OLYMP</h1>
+    <p class="lead">Dis-nous ce que tu veux voir pendant la CAN 2025, ou parle-nous de ton projet.</p>
+  </div>
+  <div class="contact-badge">
+    <span>Support · Partenariats · Presse</span>
+    <strong>Temps de réponse : &lt; 24h</strong>
+  </div>
+</section>
+
+<section class="contact-layout">
+  <form class="contact-card" method="POST" action="/contact">
+    <div class="contact-grid">
+      <label>Nom complet
+        <input type="text" name="fullName" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" required>
+      </label>
+      <label>Objet
+        <select name="topic" required>
+          <option value="support">Support</option>
+          <option value="partnership">Partenariat</option>
+          <option value="content">Suggestion de contenu</option>
+          <option value="press">Presse</option>
+          <option value="other">Autre</option>
+        </select>
+      </label>
+      <label>Message
+        <textarea name="message" rows="4" required></textarea>
+      </label>
+    </div>
+    <div class="contact-actions">
+      <label class="checkbox">
+        <input type="checkbox" name="newsletter" value="1">
+        Je souhaite recevoir la newsletter OLYMP.
+      </label>
+      <button class="btn btn-primary" type="submit">Envoyer</button>
+    </div>
+  </form>
+
+  <div class="contact-side">
+    <div class="card">
+      <h3>On lit chaque message</h3>
+      <p>Tech, contenus, influenceurs locaux : parle-nous de ce que tu veux voir.</p>
+    </div>
+    <div class="card">
+      <h3>Support direct</h3>
+      <p>Tu rencontres un souci d’accès ou de paiement ? On te répond rapidement.</p>
+    </div>
+    <div class="card">
+      <h3>Presse & partenaires</h3>
+      <p>Demande d’interview, sponsoring, ou co-création de formats CAN 2025.</p>
+    </div>
+    <div class="card">
+      <h3>Contacts OLYMP</h3>
+      <ul class="contact-list">
+        <li><strong>Support :</strong> support@olympdm.com</li>
+        <li><strong>Team :</strong> team@olympdm.com</li>
+        <li><strong>Newsletter :</strong> newsletter@olympdm.com</li>
+        <li><strong>Business/Partenaires :</strong> partners@olympdm.com</li>
+        <li><strong>Musique :</strong> music@olympdm.com</li>
+        <li><strong>No-reply :</strong> no-reply@olympdm.com</li>
+      </ul>
+    </div>
+  </div>
+</section>
+` }) %>

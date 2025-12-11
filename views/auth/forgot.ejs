@@ -1,0 +1,19 @@
+<%- include('../layout', { pageClass: 'page-auth', body: `
+<section class="auth-container">
+  <div class="auth-card">
+    <h2>Mot de passe oublié</h2>
+    <p class="auth-subtitle">On t’envoie un lien de réinitialisation (valable 1h).</p>
+
+    <form method="POST" action="/forgot-password" class="form">
+      <label>Email
+        <input type="email" name="email" required>
+      </label>
+      <button class="btn btn-primary btn-full" type="submit">Envoyer le lien</button>
+    </form>
+
+    <p class="auth-footer">
+      Tu te souviens ? <a href="/login">Retour connexion</a>
+    </p>
+  </div>
+</section>
+` }) %>

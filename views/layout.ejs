@@ -14,7 +14,7 @@
   <script src="/js/pwa-install.js" defer></script>
   <script src="/js/ui-enhance.js" defer></script>
 </head>
-<body>
+<body class="<%= typeof pageClass !== 'undefined' ? pageClass : '' %>">
   <div id="scrollProgress" class="scroll-progress"></div>
   <%- include('partials/navbar') %>
   <main class="page-wrapper">
@@ -23,38 +23,7 @@
     <%- include('partials/goalOverlay') %>
   <script src="/js/goalOverlay.js"></script>
   </main>
-  <div class="pwa-download-card">
-    <div class="pwa-download-card__logo">
-      <img src="/images/logo_simple_192.png" alt="OLYMP">
-    </div>
-    <div class="pwa-download-card__content">
-      <p class="pwa-download-card__title">OLYMP sur ton appareil</p>
-      <p class="pwa-download-card__text">Installe l’app pour un accès rapide (Android, iOS, Desktop).</p>
-    </div>
-    <div class="pwa-download-card__actions">
-      <button id="pwaInstallBtn" class="btn-store btn-store--android" type="button" style="display:none;">
-        <span class="btn-store__logo">🤖</span>
-        <span class="btn-store__content">
-          <span class="btn-store__label">Installer</span>
-          <span class="btn-store__brand">Android PWA</span>
-        </span>
-      </button>
-      <a class="btn-store btn-store--ios" href="/manifest.webmanifest" download>
-        <span class="btn-store__logo"></span>
-        <span class="btn-store__content">
-          <span class="btn-store__label">Ajouter</span>
-          <span class="btn-store__brand">iOS / iPadOS</span>
-        </span>
-      </a>
-      <a class="btn-store btn-store--desktop" href="/manifest.webmanifest" download>
-        <span class="btn-store__logo">⊞</span>
-        <span class="btn-store__content">
-          <span class="btn-store__label">Installer</span>
-          <span class="btn-store__brand">Desktop</span>
-        </span>
-      </a>
-    </div>
-  </div>
   <button id="backToTop" class="back-to-top" type="button" aria-label="Remonter">↑</button>
+  <%- include('partials/footer') %>
 </body>
 </html>

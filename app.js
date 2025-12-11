@@ -1,15 +1,39 @@
-const express = require('express');
+// Charge le .env avant toute dépendance pour rendre les variables disponibles (SMTP, Google OAuth)
+const fs = require('fs');
 const path = require('path');
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  const lines = fs.readFileSync(envPath, 'utf-8').split('\n');
+  lines.forEach(line => {
+    const match = line.match(/^\s*([^#=]+?)\s*=\s*(.*)\s*$/);
+    if (match) {
+      const key = match[1].trim();
+      let value = match[2].trim();
+      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+        value = value.slice(1, -1);
+      }
+      if (!process.env[key]) process.env[key] = value;
+    }
+  });
+}
+
+const express = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
 
-const { sequelize } = require('./models');
+const { sequelize, Subscription, User } = require('./models');
 
 const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payment');
 const videosRoutes = require('./routes/videos');
 const scoresRoutes = require('./routes/scores');
+const pagesRoutes = require('./routes/pages');
+const accountRoutes = require('./routes/account');
+const { passport } = require('./services/passport');
 
+const SESSION_SECRET = process.env.SESSION_SECRET || 'dev-olymp-secret';
+const IS_PROD = process.env.NODE_ENV === 'production';
+const ADMIN_GOAL_TOKEN = process.env.ADMIN_GOAL_TOKEN || null;
 
 const app = express();
 
@@ -24,30 +48,69 @@ app.use(express.urlencoded({ extended: true }));
 // Sessions
 app.use(
   session({
-    secret: 'olymp-super-secret',
+    name: 'olymp.sid',
+    secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: IS_PROD,
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 7 jours
+    }
   })
 );
 
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Middleware pour rendre user et messages accessibles dans les vues
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.currentUser = req.session.user || null;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
+  res.locals.subscriptionActive = false;
+
+  if (req.session?.user) {
+    try {
+      const now = new Date();
+      const active = await Subscription.findOne({
+        where: {
+          userId: req.session.user.id,
+          status: 'active',
+          endDate: { [require('sequelize').Op.gt]: now }
+        }
+      });
+      res.locals.subscriptionActive = Boolean(active);
+    } catch (err) {
+      console.error('[session] Erreur vérif abonnement actif:', err);
+    }
+  }
+
   next();
 });
 
 // Routes
 app.use('/', authRoutes);
+app.use('/', pagesRoutes);
+app.use('/', accountRoutes);
 
 // Protection : toute page nécessite une session utilisateur
 const requireAuth = (req, res, next) => {
-  const isHome = req.path === '/';
-  const isExtraits = req.path === '/extraits' || req.path.startsWith('/extraits/');
-  if (isHome || isExtraits) return next();
+  const publicPaths = [
+    '/',
+    '/extraits',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/verify',
+    '/verify/pending'
+  ];
+  if (publicPaths.includes(req.path) || publicPaths.some(p => p !== '/' && req.path.startsWith(p))) {
+    return next();
+  }
   if (req.session.user) return next();
   return res.redirect('/login');
 };
@@ -68,8 +131,22 @@ app.get('/', (req, res) => {
 // ---- GESTION SIMPLE DU "GOAL RDC" EN MÉMOIRE ----
 let goalRdcFlag = false;
 
+const requireGoalAdmin = (req, res, next) => {
+  if (!ADMIN_GOAL_TOKEN) {
+    console.warn('[goal] ADMIN_GOAL_TOKEN manquant : route /admin/goal-rdc bloquée.');
+    return res.status(503).json({ error: 'ADMIN_GOAL_TOKEN non configuré' });
+  }
+
+  const token = req.headers['x-admin-token'];
+  if (token !== ADMIN_GOAL_TOKEN) {
+    return res.status(403).json({ error: 'Accès refusé' });
+  }
+
+  next();
+};
+
 // Endpoint ADMIN pour déclencher un but (à appeler à la main pour l'instant)
-app.post('/admin/goal-rdc', (req, res) => {
+app.post('/admin/goal-rdc', requireGoalAdmin, (req, res) => {
   goalRdcFlag = true;
   console.log('⚽ GOAL RDC déclenché (flag = true)');
   res.sendStatus(204);

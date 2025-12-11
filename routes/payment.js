@@ -22,7 +22,7 @@ router.post('/subscribe', ensureAuth, async (req, res) => {
     price = 0.99;
   } else if (plan === 'quarter') {
     end.setMonth(end.getMonth() + 3); // ~ 3 mois
-    price = 5.99;
+    price = 6.99;
   } else {
     req.flash('error', 'Formule inconnue');
     return res.redirect('/payment/choose');

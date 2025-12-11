@@ -1,0 +1,18 @@
+<section class="auth-container">
+  <div class="auth-card">
+    <h2>Réinitialiser le mot de passe</h2>
+    <p class="auth-subtitle">Choisis un nouveau mot de passe.</p>
+
+    <form method="POST" action="/reset-password" class="form">
+      <input type="hidden" name="token" value="<%= token %>">
+      <label>Nouveau mot de passe
+        <input type="password" name="password" required minlength="6">
+      </label>
+      <button class="btn btn-primary btn-full" type="submit">Mettre à jour</button>
+    </form>
+
+    <p class="auth-footer">
+      Retour <a href="/login">connexion</a>
+    </p>
+  </div>
+</section>

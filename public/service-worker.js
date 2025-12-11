@@ -1,4 +1,4 @@
-const CACHE_NAME = 'olymp-pwa-v2';
+const CACHE_NAME = 'olymp-pwa-v3';
 const CORE_ASSETS = [
   '/',
   '/css/style.css',

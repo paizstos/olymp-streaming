@@ -6,20 +6,105 @@
     </a>
   </div>
 
-  <nav class="navbar-right">
-    <% if (currentUser) { %>
-      <span class="nav-username">Bonjour, <%= currentUser.fullName %></span>
-      <a href="/videos" class="nav-link">Streaming</a>
-      <a href="/videos/sport" class="nav-link">Sport</a>
-      <a href="/videos/sport" class="nav-link">Les Léopards</a>
-      <a href="/payment/choose" class="nav-btn nav-btn-outline">Mon abonnement</a>
-      <a href="/logout" class="nav-btn nav-btn-danger">Déconnexion</a>
+  <button class="nav-hamburger" id="navHamburger" type="button" aria-label="Menu">☰</button>
+
+  <nav class="navbar-right" id="navbarLinks">
+    <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+      <div class="nav-user-block">
+        <span class="nav-avatar" style="background-image:url('<%= currentUser.avatarUrl || '/images/logo_simple_192.png' %>')"></span>
+        <span class="nav-username">Bonjour, <%= currentUser.fullName %></span>
+        <% if (subscriptionActive) { %><span class="badge-premium">Premium</span><% } %>
+      </div>
+      <a href="/" class="nav-link nav-icon">⌂ Accueil</a>
+      <a href="/leopards" class="nav-link nav-icon">⭐ Les Léopards RDC <span class="badge-exclu">Exclusif</span></a>
+      <a href="/sport" class="nav-link nav-icon">⚽ Sport</a>
+      <a href="/music" class="nav-link nav-icon">♫ Musique</a>
+      <a href="/business" class="nav-link nav-icon">▣ Business</a>
+      <a href="/videos" class="nav-link nav-icon">▶ Streaming</a>
+      <div class="nav-mega">
+        <button class="nav-link nav-mega-trigger" type="button">Découvrir ▾</button>
+        <div class="mega-panel">
+          <div>
+            <p class="mega-title">Catégories</p>
+            <a href="/leopards">Les Léopards</a>
+            <a href="/sport">Sport</a>
+            <a href="/music">Musique</a>
+            <a href="/business">Business</a>
+          </div>
+          <div>
+            <p class="mega-title">Accès rapide</p>
+            <a href="/videos">Streaming</a>
+            <a href="/extraits">Extraits gratuits</a>
+            <a href="/payment/choose">Abonnement</a>
+          </div>
+          <div>
+            <p class="mega-title">Compte</p>
+            <a href="/account">Mon profil</a>
+            <a href="/logout" class="danger">Déconnexion</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-menu-wrapper">
+        <button class="nav-btn nav-btn-outline nav-menu-trigger" type="button" aria-label="Profil">Mon espace</button>
+        <div class="nav-menu" id="navMenu">
+          <a href="/account">Mon compte</a>
+          <% if (!subscriptionActive) { %>
+            <a href="/payment/choose">Prendre un abonnement</a>
+          <% } else { %>
+            <a href="/videos">Accéder au streaming</a>
+          <% } %>
+          <a href="/logout" class="danger">Déconnexion</a>
+        </div>
+      </div>
     <%} else { %>
-      <a href="/extraits" class="nav-link">Voir des extraits</a>
-      <a href="/login" class="nav-btn nav-btn-outline">Connexion</a>
-      <a href="/register" class="nav-btn nav-btn-primary">S’inscrire</a>
+      <a href="/" class="nav-link nav-icon">⌂ Accueil</a>
+      <a href="/leopards" class="nav-link nav-icon">⭐ Les Léopards RDC <span class="badge-exclu">Exclusif</span></a>
+      <a href="/sport" class="nav-link nav-icon">⚽ Sport</a>
+      <a href="/music" class="nav-link nav-icon">♫ Musique</a>
+      <a href="/business" class="nav-link nav-icon">▣ Business</a>
+      <a href="/extraits" class="nav-link nav-icon">▶ Voir des extraits</a>
+      <a href="/login" class="nav-btn nav-btn-outline nav-pill">Connexion</a>
+      <a href="/register" class="nav-btn nav-btn-primary nav-pill">S’inscrire</a>
     <% } %>
   </nav>
 </header>
-<%- include('goalOverlay') %>
-  <script src="/js/goalOverlay.js"></script>
+
+<script>
+(() => {
+  const menu = document.getElementById('navMenu');
+  const trigger = document.querySelector('.nav-menu-trigger');
+  const hamburger = document.getElementById('navHamburger');
+  const links = document.getElementById('navbarLinks');
+  const mega = document.querySelector('.nav-mega');
+  const megaPanel = document.querySelector('.mega-panel');
+
+  const closeMenu = () => menu && menu.classList.remove('open');
+
+  if (trigger && menu) {
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.classList.toggle('open');
+    });
+    document.addEventListener('click', closeMenu);
+  }
+
+  if (mega && megaPanel) {
+    const toggle = () => mega.classList.toggle('open');
+    mega.addEventListener('mouseenter', () => mega.classList.add('open'));
+    mega.addEventListener('mouseleave', () => mega.classList.remove('open'));
+    mega.querySelector('.nav-mega-trigger')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggle();
+    });
+    document.addEventListener('click', (e) => {
+      if (!mega.contains(e.target)) mega.classList.remove('open');
+    });
+  }
+
+  if (hamburger && links) {
+    hamburger.addEventListener('click', () => {
+      links.classList.toggle('open');
+    });
+  }
+})();
+</script>

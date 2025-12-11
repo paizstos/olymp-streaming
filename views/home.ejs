@@ -19,6 +19,17 @@
   <main class="page-wrapper home-landing">
     <%- include('partials/flash') %>
 
+    <% if (currentUser && !subscriptionActive) { %>
+      <div class="subscription-banner">
+        <div>
+          <p class="banner-kicker">Accès partiel</p>
+          <h3>Abonne-toi pour débloquer le streaming intégral.</h3>
+          <p class="banner-text">Tu es connecté, il ne te reste qu’à choisir une formule.</p>
+        </div>
+        <a class="btn btn-primary" href="/payment/choose">Prendre mon abonnement</a>
+      </div>
+    <% } %>
+
     <!-- HERO CINÉMA -->
     <section class="hero-cinema">
       <!-- Vidéo de fond -->
@@ -150,6 +161,36 @@
       </div>
     </section>
 
+    <section class="cta-subscription">
+      <div class="cta-subscription-inner">
+        <div>
+          <p class="kicker">Plus d’extraits ?</p>
+          <% if (!currentUser) { %>
+            <h2>Inscris-toi et choisis ton accès.</h2>
+            <p>Un compte, un abonnement, et tu débloques tous les lives et replays.</p>
+          <% } else if (subscriptionActive) { %>
+            <h2>Tu es abonné, lance le streaming.</h2>
+            <p>Les lives et replays OLYMP t’attendent.</p>
+          <% } else { %>
+            <h2>Prends ton pass et profite du streaming complet.</h2>
+            <p>Tu es connecté, il ne te reste qu’à valider l’offre.</p>
+          <% } %>
+        </div>
+        <div class="cta-subscription-actions">
+          <% if (!currentUser) { %>
+            <a class="btn btn-primary" href="/register">Créer mon compte</a>
+            <a class="btn btn-ghost" href="/login">J’ai déjà un compte</a>
+          <% } else if (subscriptionActive) { %>
+            <a class="btn btn-primary" href="/videos">Accéder au streaming</a>
+            <a class="btn btn-ghost" href="/account">Voir mon profil</a>
+          <% } else { %>
+            <a class="btn btn-primary" href="/payment/choose">Prendre un abonnement</a>
+            <a class="btn btn-ghost" href="/account">Compléter mon profil</a>
+          <% } %>
+        </div>
+      </div>
+    </section>
+
     <!-- SECTION SCORES / CLASSEMENT LÉOPARDS -->
     <section class="leopards-stats-section" id="leopardsStats">
       <div class="leopards-stats-inner">
@@ -246,6 +287,10 @@
       </div>
     </div>
   </main>
+
+  <%- include('partials/goalOverlay') %>
+  <script src="/js/goalOverlay.js"></script>
+  <%- include('partials/footer') %>
 
   <script src="/js/homeLanding.js"></script>
   <style>

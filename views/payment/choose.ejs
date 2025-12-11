@@ -1,45 +1,62 @@
 <%- include('../layout', { body: `
-<section class="payment-container">
-  <div class="payment-header">
-    <h2>Choisis ton abonnement</h2>
-    <p>Simulation de paiement – intégration IllicoCash et RAWBANK à venir.</p>
+<section class="pricing-hero">
+  <p class="pricing-kicker">Abonnement</p>
+  <h1>Le streaming OLYMP sans compromis</h1>
+  <p class="lead">Lives, replays, coulisses · Essentiel pour suivre la CAN 2025.</p>
+  <div class="pricing-toggle">
+    <span class="pill active">Trimestriel</span>
+    <span class="pill muted">Annuel (bientôt)</span>
   </div>
-
-  <form method="POST" action="/payment/subscribe" class="plans-grid">
-    <label class="plan-card">
-      <input type="radio" name="plan" value="daily" checked>
-      <div class="plan-body">
-        <h3>Basic Jour</h3>
-        <p class="plan-price">0,99 $ <span>/ jour</span></p>
-        <p class="plan-text">Parfait pour suivre un match ou une journée clé.</p>
-        <ul class="plan-list">
-          <li>Accès illimité à tous les lives pendant 24h</li>
-          <li>Rediffusions des matchs du jour</li>
-        </ul>
-      </div>
-    </label>
-
-    <label class="plan-card plan-card-highlight">
-      <input type="radio" name="plan" value="quarter">
-      <div class="plan-body">
-        <h3>Pass CAN</h3>
-        <p class="plan-price">5,99 $ <span>/ 3 mois</span></p>
-        <p class="plan-text">Toute la compétition, du coup d’envoi à la finale.</p>
-        <ul class="plan-list">
-          <li>Accès complet à tous les lives</li>
-          <li>Docs exclusifs “Dans la peau d’un Léopard”</li>
-          <li>Débriefs quotidiens et coulisses</li>
-        </ul>
-      </div>
-    </label>
-
-    <button class="btn btn-primary btn-full payment-submit" type="submit">
-      Valider (paiement simulé)
-    </button>
-  </form>
-
-  <p class="payment-note">
-    Le paiement réel via IllicoCash / Rawbank sera intégré plus tard.
-  </p>
 </section>
+
+<form method="POST" action="/payment/subscribe" class="pricing-grid">
+  <label class="pricing-card">
+    <input type="radio" name="plan" value="daily" checked>
+    <div class="pricing-card-inner">
+      <p class="pricing-name">Basic Jour</p>
+      <p class="pricing-price"><strong>0,99 $</strong><span>/ 24h</span></p>
+      <p class="pricing-note">Pour un match clé.</p>
+      <ul class="pricing-list">
+        <li>Accès illimité aux lives 24h</li>
+        <li>Rediffusion des matchs du jour</li>
+      </ul>
+      <button class="btn btn-ghost btn-full" type="button">Choisir</button>
+    </div>
+  </label>
+
+  <label class="pricing-card pricing-card--highlight">
+    <input type="radio" name="plan" value="quarter">
+    <div class="pricing-card-inner">
+      <p class="pricing-badge">Recommandé</p>
+      <p class="pricing-name">Pass CAN</p>
+      <p class="pricing-price"><strong>6,99 $</strong><span>/ 3 mois</span></p>
+      <p class="pricing-note">Toute la compétition sans limite.</p>
+      <ul class="pricing-list">
+        <li>Accès complet à tous les lives</li>
+        <li>Docs exclusifs “Dans la peau d’un Léopard”</li>
+        <li>Débriefs quotidiens et coulisses</li>
+      </ul>
+      <button class="btn btn-primary btn-full" type="button">Choisir</button>
+    </div>
+  </label>
+
+  <button class="btn btn-primary btn-full payment-submit" type="submit">
+    Valider (paiement simulé)
+  </button>
+</form>
+
+<section class="pwa-bottom">
+  <div class="pwa-bottom-inner">
+    <div class="pwa-bottom-left">
+      <p class="pwa-title">OLYMP sur ton appareil</p>
+      <p class="pwa-text">Installe l’app PWA pour un accès rapide (Android, iOS, desktop).</p>
+    </div>
+    <div class="pwa-bottom-actions">
+      <a class="btn-store btn-store--android" href="/manifest.webmanifest" download>Android PWA</a>
+      <a class="btn-store btn-store--ios" href="/manifest.webmanifest" download>iOS / iPadOS</a>
+      <a class="btn-store btn-store--desktop" href="/manifest.webmanifest" download>Desktop</a>
+    </div>
+  </div>
+</section>
+<script src="/js/payment.js"></script>
 ` }) %>

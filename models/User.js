@@ -13,6 +13,39 @@ const User = sequelize.define('User', {
   },
   fullName: {
     type: DataTypes.STRING, allowNull: false
+  },
+  firstName: {
+    type: DataTypes.STRING, allowNull: true
+  },
+  lastName: {
+    type: DataTypes.STRING, allowNull: true
+  },
+  country: {
+    type: DataTypes.STRING, allowNull: true
+  },
+  birthDate: {
+    type: DataTypes.DATEONLY, allowNull: true
+  },
+  avatarUrl: {
+    type: DataTypes.STRING, allowNull: true
+  },
+  emailVerified: {
+    type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false
+  },
+  googleId: {
+    type: DataTypes.STRING, allowNull: true, unique: true
+  },
+  verifyToken: {
+    type: DataTypes.STRING, allowNull: true
+  },
+  verifyTokenExpires: {
+    type: DataTypes.DATE, allowNull: true
+  },
+  resetToken: {
+    type: DataTypes.STRING, allowNull: true
+  },
+  resetTokenExpires: {
+    type: DataTypes.DATE, allowNull: true
   }
 });
 

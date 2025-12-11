@@ -1,24 +1,97 @@
-<%- include('../layout', { body: `
-<section class="auth-container">
-  <div class="auth-card">
-    <h2>Créer mon compte OLYMP</h2>
-    <p class="auth-subtitle">1. Inscription  •  2. Abonnement  •  3. Match.</p>
+<%- include('../layout', { pageClass: 'page-auth', body: `
+<section class="auth-container auth-container--wide">
+  <div class="auth-card auth-card--register">
+    <div class="auth-card__header">
+      <div>
+        <p class="auth-kicker">1. Inscription • 2. Abonnement • 3. Match</p>
+        <h2>Créer mon compte OLYMP</h2>
+      </div>
+      <img class="auth-logo-mark" src="/images/logo_simple_192.png" alt="OLYMP">
+    </div>
 
-    <form method="POST" action="/register" class="form">
-      <label>Nom complet
-        <input type="text" name="fullName" required>
-      </label>
+    <form method="POST" action="/register" class="form form-progressive" id="registerForm">
+      <div class="form-step" data-step="0">
+        <label>Prénom
+          <input type="text" name="firstName" autocomplete="given-name" required>
+        </label>
+      </div>
 
-      <label>Email
-        <input type="email" name="email" required>
-      </label>
+      <div class="form-step" data-step="1">
+        <label>Nom
+          <input type="text" name="lastName" autocomplete="family-name" required>
+        </label>
+      </div>
 
-      <label>Mot de passe
-        <input type="password" name="password" required minlength="6">
-      </label>
+      <div class="form-step" data-step="2">
+        <label>Date de naissance
+          <input type="date" name="birthDate" required>
+        </label>
+      </div>
 
-      <button class="btn btn-primary btn-full" type="submit">
-        Continuer vers l’abonnement
+      <div class="form-step" data-step="3">
+        <label>Email
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+      </div>
+
+      <div class="form-step" data-step="4">
+        <label>Mot de passe
+          <input type="password" name="password" required minlength="6">
+        </label>
+      </div>
+
+      <div class="form-step" data-step="5">
+        <label>Confirme ton mot de passe
+          <input type="password" name="passwordConfirm" required minlength="6">
+        </label>
+      </div>
+
+      <div class="form-step" data-step="6">
+        <label>Pays
+          <select name="country" required>
+            <option value="">Sélectionner un pays</option>
+            <option value="CD">RD Congo</option>
+            <option value="FR">France</option>
+            <option value="BE">Belgique</option>
+            <option value="MA">Maroc</option>
+            <option value="CI">Côte d’Ivoire</option>
+            <option value="SN">Sénégal</option>
+            <option value="NG">Nigeria</option>
+            <option value="ZA">Afrique du Sud</option>
+            <option value="US">États-Unis</option>
+            <option value="CA">Canada</option>
+            <option value="GB">Royaume-Uni</option>
+            <option value="CH">Suisse</option>
+            <option value="DE">Allemagne</option>
+            <option value="ES">Espagne</option>
+            <option value="IT">Italie</option>
+            <option value="OTHER">Autre</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="form-step" data-step="7">
+        <label class="switch-row">
+          <span>S’abonner à la newsletter OLYMP</span>
+          <label class="switch">
+            <input type="checkbox" name="newsletter" value="1">
+            <span class="slider"></span>
+          </label>
+        </label>
+      </div>
+
+      <div class="form-step" data-step="8">
+        <label class="switch-row">
+          <span>J’accepte les Conditions Générales OLYMP</span>
+          <label class="switch">
+            <input type="checkbox" name="acceptTerms" value="1" required>
+            <span class="slider"></span>
+          </label>
+        </label>
+      </div>
+
+      <button class="btn btn-primary btn-full" type="submit" id="registerSubmit">
+        Continuer
       </button>
     </form>
 
@@ -28,4 +101,5 @@
     </p>
   </div>
 </section>
+<script src="/js/register.js"></script>
 ` }) %>
