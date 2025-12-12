@@ -167,15 +167,30 @@ app.get('/api/goal-rdc', (req, res) => {
 });
 
 // Sync DB puis start
-sequelize
-  .sync()
-  .then(() => {
-    console.log('DB ready');
-    const PORT = process.env.PORT || 3000;
+const start = () => {
+  sequelize
+    .sync()
+    .then(() => {
+      console.log('DB ready');
+      const PORT = process.env.PORT || 3000;
+      app.listen(PORT, () => {
+        console.log('OLYMP streaming listening on port', PORT);
+      });
+    })
+    .catch(err => console.error(err));
+};
 
-    app.listen(PORT, () => {
-    console.log('OLYMP streaming listening on port', PORT);
-    });
+if (require.main === module) {
+  start();
+}
 
-  })
-  .catch(err => console.error(err));
+app.use((req, res) => {
+  res.status(404).render('404', { metaTitle: 'Page introuvable – OLYMP' });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).render('500', { metaTitle: 'Erreur serveur – OLYMP' });
+});
+
+module.exports = app;

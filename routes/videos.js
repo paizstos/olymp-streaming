@@ -45,7 +45,7 @@ router.get('/', ensureActiveSubscription, async (req, res) => {
         if (error) {
           console.error('Erreur API Vimeo:', error);
           req.flash('error', "Impossible de charger les vidéos Vimeo pour l'instant.");
-          return res.render('videos/index', { videos: [] });
+          return res.render('videos/index', { videos: [], vimeoError: true });
         }
 
         const vimeoVideos = body?.data || [];

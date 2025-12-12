@@ -1982,6 +1982,15 @@ a {
   margin: 0 auto;
 }
 
+.alert-error {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(232, 65, 65, 0.18);
+  border: 1px solid rgba(232, 65, 65, 0.5);
+  color: #ffdede;
+  margin-bottom: 12px;
+}
+
 .videos-header h2 {
   margin-bottom: 4px;
 }

@@ -17,6 +17,10 @@
         <p>Choisis ton match, ton débat ou ton documentaire.</p>
       </div>
 
+      <% if (typeof vimeoError !== 'undefined' && vimeoError) { %>
+        <div class="alert-error">Impossible de charger les vidéos pour l’instant. Réessaie plus tard.</div>
+      <% } %>
+
       <div class="videos-grid">
         <% if (videos.length === 0) { %>
           <p>Aucune vidéo pour le moment. Lance le seed ou ajoute des vidéos dans la base.</p>
