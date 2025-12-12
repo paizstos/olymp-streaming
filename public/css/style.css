@@ -178,12 +178,6 @@ a {
   box-shadow: var(--shadow-subtle);
 }
 
-.nav-link.nav-icon {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .badge-premium {
   background: linear-gradient(135deg, #f1c40f, #f5e28b);
   color: #2d1f02;
