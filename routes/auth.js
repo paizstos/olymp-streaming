@@ -58,7 +58,20 @@ router.post('/login', async (req, res) => {
     }
   }
 
-  res.redirect('/');
+  const now = new Date();
+  const active = await require('../models').Subscription.findOne({
+    where: {
+      userId: user.id,
+      status: 'active',
+      endDate: { [require('sequelize').Op.gt]: now }
+    }
+  });
+
+  if (active) {
+    return res.redirect('/videos');
+  }
+
+  return res.redirect('/payment/choose');
 });
 
 // GET /register

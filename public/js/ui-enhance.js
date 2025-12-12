@@ -1,6 +1,7 @@
 (() => {
   const progress = document.getElementById('scrollProgress');
   const backToTop = document.getElementById('backToTop');
+  const flashes = document.querySelectorAll('.flash');
 
   const update = () => {
     const scrolled = window.scrollY;
@@ -26,4 +27,15 @@
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
   update();
+
+  // Auto-hide flash messages after 4s
+  if (flashes && flashes.length) {
+    setTimeout(() => {
+      flashes.forEach(f => {
+        f.style.opacity = '0';
+        f.style.transition = 'opacity 0.4s ease';
+        setTimeout(() => f.remove(), 400);
+      });
+    }, 4000);
+  }
 })();
