@@ -27,56 +27,62 @@ router.get('/login', (req, res) => {
 
 // POST /login
 router.post('/login', async (req, res) => {
-  const { email, password, newsletter, acceptTerms } = req.body;
+  try {
+    const { email, password, newsletter, acceptTerms } = req.body;
 
-  const user = await User.findOne({ where: { email } });
-  if (!user) {
-    req.flash('error', 'Email ou mot de passe incorrect');
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      req.flash('error', 'Email ou mot de passe incorrect');
+      return res.redirect('/login');
+    }
+
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid) {
+      req.flash('error', 'Email ou mot de passe incorrect');
+      return res.redirect('/login');
+    }
+
+    if (!user.emailVerified) {
+      req.flash('error', 'Merci de confirmer ton email avant de te connecter.');
+      return res.redirect('/verify/pending');
+    }
+
+    req.session.user = { id: user.id, email: user.email, fullName: user.fullName };
+    req.flash('success', 'Connexion réussie');
+
+    // Enregistre l’opt-in newsletter si demandé
+    if (newsletter === '1') {
+      try {
+        await NewsletterSignup.create({
+          email: user.email,
+          country: null,
+          acceptTerms: acceptTerms === '1',
+          source: 'login'
+        });
+      } catch (err) {
+        console.error('Newsletter signup error:', err);
+      }
+    }
+
+    const now = new Date();
+    const active = await require('../models').Subscription.findOne({
+      where: {
+        userId: user.id,
+        status: 'active',
+        endDate: { [require('sequelize').Op.gt]: now }
+      }
+    });
+
+    if (active) {
+      return res.redirect('/videos');
+    }
+
+    return res.redirect('/payment/choose');
+  } catch (err) {
+    console.error('Login error:', err);
+    req.flash('error', 'Erreur de connexion, réessaie dans un instant.');
     return res.redirect('/login');
   }
-
-  const valid = await bcrypt.compare(password, user.passwordHash);
-  if (!valid) {
-    req.flash('error', 'Email ou mot de passe incorrect');
-    return res.redirect('/login');
-  }
-
-  if (!user.emailVerified) {
-    req.flash('error', 'Merci de confirmer ton email avant de te connecter.');
-    return res.redirect('/verify/pending');
-  }
-
-  req.session.user = { id: user.id, email: user.email, fullName: user.fullName };
-  req.flash('success', 'Connexion réussie');
-
-  // Enregistre l’opt-in newsletter si demandé
-  if (newsletter === '1') {
-    try {
-      await NewsletterSignup.create({
-        email: user.email,
-        country: null,
-        acceptTerms: acceptTerms === '1',
-        source: 'login'
-      });
-    } catch (err) {
-      console.error('Newsletter signup error:', err);
-    }
-  }
-
-  const now = new Date();
-  const active = await require('../models').Subscription.findOne({
-    where: {
-      userId: user.id,
-      status: 'active',
-      endDate: { [require('sequelize').Op.gt]: now }
-    }
-  });
-
-  if (active) {
-    return res.redirect('/videos');
-  }
-
-  return res.redirect('/payment/choose');
 });
 
 // GET /register

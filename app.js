@@ -22,6 +22,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 
 const { sequelize, Subscription, User } = require('./models');
+const { DataTypes } = require('sequelize');
 
 const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payment');
@@ -167,11 +168,41 @@ app.get('/', (req, res) => {
   res.render('home');
 });
 
+// Ajout défensif des colonnes manquantes sur Users (pour les bases déjà créées en prod)
+async function patchUserSchema() {
+  try {
+    const qi = sequelize.getQueryInterface();
+    const table = await qi.describeTable('Users');
+    const candidates = {
+      firstName: { type: DataTypes.STRING, allowNull: true },
+      lastName: { type: DataTypes.STRING, allowNull: true },
+      country: { type: DataTypes.STRING, allowNull: true },
+      birthDate: { type: DataTypes.DATEONLY, allowNull: true },
+      avatarUrl: { type: DataTypes.STRING, allowNull: true },
+      emailVerified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+      googleId: { type: DataTypes.STRING, allowNull: true, unique: true },
+      verifyToken: { type: DataTypes.STRING, allowNull: true },
+      verifyTokenExpires: { type: DataTypes.DATE, allowNull: true },
+      resetToken: { type: DataTypes.STRING, allowNull: true },
+      resetTokenExpires: { type: DataTypes.DATE, allowNull: true }
+    };
+    for (const [column, definition] of Object.entries(candidates)) {
+      if (!table[column]) {
+        await qi.addColumn('Users', column, definition);
+        console.log(`[db] colonne ajoutée: Users.${column}`);
+      }
+    }
+  } catch (err) {
+    console.error('[db] Patch Users schema error:', err.message || err);
+  }
+}
+
 // Sync DB puis start
 const start = () => {
   const alter = true; // aligne le schéma (ajoute les colonnes manquantes type firstName, lastName…)
   sequelize
     .sync({ alter })
+    .then(() => patchUserSchema())
     .then(() => {
       console.log('DB ready');
       const PORT = process.env.PORT || 3000;
