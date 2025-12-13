@@ -816,6 +816,46 @@ a {
   gap: 12px;
 }
 
+.account-card label {
+  display: block;
+  font-size: 13px;
+  color: #dbe7ff;
+}
+
+.account-card input,
+.account-card select {
+  margin-top: 6px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(8, 22, 40, 0.92);
+  color: #e9eef5;
+  font-size: 14px;
+  transition: border var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.account-card input::placeholder {
+  color: #a8b7cc;
+  opacity: 0.85;
+}
+
+.account-card input:focus,
+.account-card select:focus {
+  outline: none;
+  border-color: rgba(1, 181, 116, 0.8);
+  box-shadow: 0 0 0 2px rgba(1, 181, 116, 0.2);
+  transform: translateY(-1px);
+}
+
+.account-card input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+}
+
 .account-card--wide {
   padding: 18px;
   gap: 14px;

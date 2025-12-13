@@ -169,8 +169,9 @@ app.get('/', (req, res) => {
 
 // Sync DB puis start
 const start = () => {
+  const alter = true; // aligne le schéma (ajoute les colonnes manquantes type firstName, lastName…)
   sequelize
-    .sync()
+    .sync({ alter })
     .then(() => {
       console.log('DB ready');
       const PORT = process.env.PORT || 3000;
