@@ -38,6 +38,8 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 const ADMIN_GOAL_TOKEN = process.env.ADMIN_GOAL_TOKEN || null;
 
 const app = express();
+// Nécessaire derrière un proxy (Railway/HTTPS) pour que les cookies de session "secure" soient bien posés
+app.set('trust proxy', 1);
 
 // EJS + statiques
 app.set('view engine', 'ejs');
