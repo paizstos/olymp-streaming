@@ -96,36 +96,8 @@ app.use('/', authRoutes);
 app.use('/', pagesRoutes);
 app.use('/', accountRoutes);
 
-// Protection : toute page nécessite une session utilisateur
-const requireAuth = (req, res, next) => {
-  const publicPaths = [
-    '/',
-    '/extraits',
-    '/login',
-    '/register',
-    '/forgot-password',
-    '/reset-password',
-    '/verify',
-    '/verify/pending'
-  ];
-  if (publicPaths.includes(req.path) || publicPaths.some(p => p !== '/' && req.path.startsWith(p))) {
-    return next();
-  }
-  if (req.session.user) return next();
-  return res.redirect('/login');
-};
-
-app.use(requireAuth);
-
-app.use('/payment', paymentRoutes);
-app.use('/videos', videosRoutes);
+// Routes publiques API (scores, goal overlay admin token)
 app.use('/api/scores', scoresRoutes);
-
-
-// Landing publique
-app.get('/', (req, res) => {
-  res.render('home');
-});
 
 /* ==================== GOAL ANIM ROUTES ===================== */
 // ---- GESTION SIMPLE DU "GOAL RDC" EN MÉMOIRE ----
@@ -155,7 +127,6 @@ app.post('/admin/goal-rdc', requireGoalAdmin, (req, res) => {
 // Endpoint API appelé par le front toutes les X secondes
 app.get('/api/goal-rdc', (req, res) => {
   if (goalRdcFlag) {
-    // on reset le flag, comme ça le but n’est annoncé qu’une fois
     goalRdcFlag = false;
     return res.json({
       goal: true,
@@ -164,6 +135,36 @@ app.get('/api/goal-rdc', (req, res) => {
     });
   }
   res.json({ goal: false });
+});
+
+// Protection : toute page nécessite une session utilisateur
+const requireAuth = (req, res, next) => {
+  const publicPaths = [
+    '/',
+    '/extraits',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/verify',
+    '/verify/pending'
+  ];
+  if (publicPaths.includes(req.path) || publicPaths.some(p => p !== '/' && req.path.startsWith(p))) {
+    return next();
+  }
+  if (req.session.user) return next();
+  return res.redirect('/login');
+};
+
+app.use(requireAuth);
+
+app.use('/payment', paymentRoutes);
+app.use('/videos', videosRoutes);
+
+
+// Landing publique
+app.get('/', (req, res) => {
+  res.render('home');
 });
 
 // Sync DB puis start

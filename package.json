@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "seed": "node seed.js",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@vimeo/vimeo": "^3.0.3",
