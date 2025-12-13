@@ -22,7 +22,8 @@ const session = require('express-session');
 const flash = require('connect-flash');
 
 const { sequelize, Subscription, User } = require('./models');
-const { DataTypes } = require('sequelize');
+const { DataTypes, Op } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payment');
@@ -197,12 +198,60 @@ async function patchUserSchema() {
   }
 }
 
+// Crée/force deux comptes premium de test (local + prod) pour faciliter la QA
+async function ensureTestUsers() {
+  const testUsers = [
+    { email: 'adammalila11@gmail.com', firstName: 'Adam', lastName: 'Malila', country: 'BE' },
+    { email: 'paizstos11012001@gmail.com', firstName: 'Paizstos', lastName: 'Olymp', country: 'BE' }
+  ];
+  const passwordHash = await bcrypt.hash('olymp123', 10);
+  const endDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000); // +90 jours
+
+  for (const u of testUsers) {
+    const fullName = `${u.firstName} ${u.lastName}`.trim();
+    const [user] = await User.findOrCreate({
+      where: { email: u.email },
+      defaults: {
+        email: u.email,
+        passwordHash,
+        fullName,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        country: u.country,
+        emailVerified: true
+      }
+    });
+    if (user.passwordHash !== passwordHash || !user.emailVerified) {
+      user.passwordHash = passwordHash;
+      user.emailVerified = true;
+      user.firstName = user.firstName || u.firstName;
+      user.lastName = user.lastName || u.lastName;
+      user.fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || fullName;
+      await user.save();
+    }
+    const active = await Subscription.findOne({
+      where: { userId: user.id, status: 'active', endDate: { [Op.gt]: new Date() } }
+    });
+    if (!active) {
+      await Subscription.create({
+        userId: user.id,
+        plan: 'premium',
+        status: 'active',
+        startDate: new Date(),
+        endDate
+      });
+      console.log(`[seed] Abonnement actif créé pour ${u.email}`);
+    }
+  }
+}
+
 // Sync DB puis start
 const start = () => {
   const alter = true; // aligne le schéma (ajoute les colonnes manquantes type firstName, lastName…)
   sequelize
     .sync({ alter })
     .then(() => patchUserSchema())
+    .then(() => ensureTestUsers())
     .then(() => {
       console.log('DB ready');
       const PORT = process.env.PORT || 3000;
