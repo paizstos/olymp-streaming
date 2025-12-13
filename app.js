@@ -236,6 +236,8 @@ async function ensureTestUsers() {
       await Subscription.create({
         userId: user.id,
         plan: 'premium',
+        type: 'quarter',
+        price: 6.99,
         status: 'active',
         startDate: new Date(),
         endDate
