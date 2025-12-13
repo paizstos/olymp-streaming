@@ -1,0 +1,33 @@
+<section class="auth-container">
+  <div class="auth-card">
+    <h2>Connexion</h2>
+    <p class="auth-subtitle">Reprends le match là où tu t’es arrêté.</p>
+
+    <form method="POST" action="/login" class="form">
+      <label>Email
+        <input type="email" name="email" required value="<%= typeof prefillEmail !== 'undefined' ? prefillEmail : '' %>">
+      </label>
+
+      <label>Mot de passe
+        <input type="password" name="password" required>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="newsletter" value="1">
+        S’abonner à la newsletter OLYMP
+      </label>
+
+      <button class="btn btn-primary btn-full" type="submit">Se connecter</button>
+    </form>
+    <div class="social-login">
+      <a class="btn btn-ghost btn-full" href="/auth/google">Continuer avec Google</a>
+    </div>
+
+    <p class="auth-footer">
+      Pas encore de compte ?
+      <a href="/register">Créer un compte</a>
+      ·
+      <a href="/forgot-password">Mot de passe oublié ?</a>
+    </p>
+  </div>
+</section>
