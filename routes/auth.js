@@ -17,7 +17,12 @@ router.get('/dash' ,(req, res) => {
 });
 
 router.get('/login', (req, res) => {
-  res.render('auth/login');
+  const prefillEmail = req.query.email || '';
+  const already = req.query.already === '1';
+  if (already) {
+    req.flash('error', 'Compte déjà créé : connecte-toi ou utilise “Mot de passe oublié”.');
+  }
+  res.render('auth/login', { prefillEmail, metaTitle: 'Connexion – OLYMP' });
 });
 
 // POST /login
@@ -111,8 +116,8 @@ router.post('/register', async (req, res) => {
 
     const existing = await User.findOne({ where: { email } });
     if (existing) {
-      req.flash('error', 'Un compte existe déjà avec cet email');
-      return res.redirect('/register');
+      req.flash('error', 'Compte déjà créé : connecte-toi ou utilise “Mot de passe oublié”.');
+      return res.redirect(`/login?email=${encodeURIComponent(email)}&already=1`);
     }
 
     const hash = await bcrypt.hash(password, 10);
@@ -151,7 +156,7 @@ router.post('/register', async (req, res) => {
       to: user.email,
       subject: 'Confirme ton inscription OLYMP',
       text: `Bienvenue ${user.fullName || ''}, confirme ton inscription : ${confirmLink}`,
-      html: `<p>Bienvenue ${user.fullName || ''},</p><p>Confirme ton inscription en cliquant ici : <a href="${confirmLink}">${confirmLink}</a></p><p>Ce message est envoyé par no-reply@olympdm.com.</p>`
+      html: `<p>Bienvenue ${user.fullName || ''},</p><p>Confirme ton inscription en cliquant ici : <a href="${confirmLink}">${confirmLink}</a></p><p>Ce message est envoyé par contact@olympdm.com.</p>`
     }).catch(err => console.error('Send confirm email error:', err));
 
     req.session.user = { id: user.id, email: user.email, fullName: user.fullName };
