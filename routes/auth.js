@@ -42,11 +42,6 @@ router.post('/login', async (req, res) => {
       return res.redirect('/login');
     }
 
-    if (!user.emailVerified) {
-      req.flash('error', 'Merci de confirmer ton email avant de te connecter.');
-      return res.redirect('/verify/pending');
-    }
-
     req.session.user = { id: user.id, email: user.email, fullName: user.fullName };
     req.flash('success', 'Connexion réussie');
 
@@ -127,9 +122,6 @@ router.post('/register', async (req, res) => {
     }
 
     const hash = await bcrypt.hash(password, 10);
-    const verifyTokenRaw = crypto.randomBytes(32).toString('hex');
-    const verifyToken = crypto.createHash('sha256').update(verifyTokenRaw).digest('hex');
-    const verifyExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     const user = await User.create({
       email,
@@ -139,8 +131,9 @@ router.post('/register', async (req, res) => {
       lastName,
       birthDate,
       country,
-      verifyToken,
-      verifyTokenExpires: verifyExpires
+      emailVerified: true,
+      verifyToken: null,
+      verifyTokenExpires: null
     });
 
     if (newsletter === '1') {
@@ -156,17 +149,9 @@ router.post('/register', async (req, res) => {
       }
     }
 
-    // Email de confirmation
-    const confirmLink = `${req.protocol}://${req.get('host')}/verify?token=${verifyTokenRaw}`;
-    sendMail({
-      to: user.email,
-      subject: 'Confirme ton inscription OLYMP',
-      text: `Bienvenue ${user.fullName || ''}, confirme ton inscription : ${confirmLink}`,
-      html: `<p>Bienvenue ${user.fullName || ''},</p><p>Confirme ton inscription en cliquant ici : <a href="${confirmLink}">${confirmLink}</a></p><p>Ce message est envoyé par contact@olympdm.com.</p>`
-    }).catch(err => console.error('Send confirm email error:', err));
-
+    // Plus de confirmation : on connecte et on envoie vers paiement
     req.session.user = { id: user.id, email: user.email, fullName: user.fullName };
-    res.redirect('/verify/pending');
+    res.redirect('/payment/choose');
   } catch (err) {
     console.error(err);
     req.flash('error', 'Erreur lors de la création du compte');
