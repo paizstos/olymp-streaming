@@ -1,12 +1,16 @@
 const express = require('express');
-const { User } = require('../models');
+const { User, Subscription } = require('../models');
 const { ensureAuth } = require('./utils');
 
 const router = express.Router();
 
 router.get('/account', ensureAuth, async (req, res) => {
   const user = await User.findByPk(req.session.user.id);
-  res.render('account', { user });
+  const subscription = await Subscription.findOne({
+    where: { userId: req.session.user.id, status: 'active' },
+    order: [['endDate', 'DESC']]
+  });
+  res.render('account', { user, subscription });
 });
 
 router.post('/account', ensureAuth, async (req, res) => {

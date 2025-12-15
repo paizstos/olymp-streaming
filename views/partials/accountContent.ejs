@@ -9,6 +9,9 @@
   </div>
 </section>
 
+<!-- CropperJS (CDN) -->
+<link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
+
 <section class="account-grid enhanced">
   <form class="account-card account-card--wide" method="POST" action="/account" enctype="multipart/form-data">
     <div class="form-two-cols">
@@ -32,22 +35,16 @@
     </div>
     <input type="hidden" name="avatarUrl" id="avatarUrl" value="<%= user.avatarUrl || '' %>">
 
-    <div class="upload-block">
+    <div class="upload-block upload-block--round">
       <div>
         <p class="upload-title">Photo de profil</p>
-        <p class="upload-text">Upload ou colle un lien. Formats jpg/png, aperçu instantané.</p>
-        <div class="upload-actions">
-          <label class="btn btn-ghost btn-small">
-            Choisir un fichier
-            <input type="file" id="avatarFile" accept="image/*" hidden>
-          </label>
-          <label class="btn btn-outline btn-small">
-            Coller un lien
-            <input type="url" id="avatarInput" placeholder="https://..." value="<%= user.avatarUrl || '' %>" class="input-inline">
-          </label>
-        </div>
+        <p class="upload-text">Importe une image (jpg/png). L’aperçu est recadré en cercle comme sur LinkedIn.</p>
+        <label class="btn btn-outline btn-small pill">
+          Importer une photo
+          <input type="file" id="avatarFile" accept="image/*" hidden>
+        </label>
       </div>
-      <div class="upload-preview" id="avatarPreview" style="background-image:url('<%= user.avatarUrl || '/images/logo_simple_192.png' %>')"></div>
+      <div class="avatar-preview-round" id="avatarPreview" style="background-image:url('<%= user.avatarUrl || '/images/logo_simple_192.png' %>')"></div>
     </div>
 
     <button class="btn btn-primary btn-full" type="submit">Enregistrer</button>
@@ -57,7 +54,17 @@
     <div class="card">
       <h3>Abonnement</h3>
       <p>Gère ton offre et tes moyens de paiement.</p>
+      <% if (typeof subscription !== 'undefined' && subscription) { %>
+        <p class="mini-list">
+          Offre : <strong><%= subscription.type === 'daily' ? 'Premium · Jour' : subscription.type === 'quarter' ? 'Premium · Pass CAN' : 'Premium' %></strong><br>
+          Début : <%= subscription.startDate ? subscription.startDate.toISOString().slice(0,10) : '-' %><br>
+          Fin : <%= subscription.endDate ? subscription.endDate.toISOString().slice(0,10) : '-' %>
+        </p>
+      <% } else { %>
+        <p class="mini-list">Aucun abonnement actif.</p>
+      <% } %>
       <a class="btn btn-ghost" href="/payment/choose">Accéder à mon abonnement</a>
+      <a class="btn btn-outline pill" href="/payment/choose" style="margin-top:8px;">Modifier mes moyens de paiement</a>
     </div>
     <div class="card">
       <h3>Support</h3>
@@ -69,4 +76,20 @@
     </div>
   </div>
 </section>
+
+<!-- Modal de recadrage -->
+<div class="cropper-modal" id="cropperModal" aria-hidden="true">
+  <div class="cropper-modal__content">
+    <h3>Recadre ta photo</h3>
+    <div class="cropper-modal__canvas">
+      <img id="cropperImage" alt="Aperçu" style="max-width:100%; display:block;">
+    </div>
+    <div class="cropper-modal__actions">
+      <button type="button" class="btn btn-ghost" id="cropperCancel">Annuler</button>
+      <button type="button" class="btn btn-primary" id="cropperValidate">Valider</button>
+    </div>
+  </div>
+</div>
+
 <script src="/js/account.js"></script>
+<script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>

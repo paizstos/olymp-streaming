@@ -71,13 +71,27 @@ app.use(passport.session());
 
 // Middleware pour rendre user et messages accessibles dans les vues
 app.use(async (req, res, next) => {
-  res.locals.currentUser = req.session.user || null;
+  res.locals.currentUser = null;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   res.locals.subscriptionActive = false;
+  res.locals.subscriptionBadge = null;
 
   if (req.session?.user) {
     try {
+      // Recharge le user complet pour la navbar (nom, avatar)
+      const dbUser = await User.findByPk(req.session.user.id);
+      if (dbUser) {
+        const current = {
+          id: dbUser.id,
+          email: dbUser.email,
+          fullName: dbUser.fullName,
+          avatarUrl: dbUser.avatarUrl
+        };
+        req.session.user = current;
+        res.locals.currentUser = current;
+      }
+
       const now = new Date();
       const active = await Subscription.findOne({
         where: {
@@ -86,7 +100,20 @@ app.use(async (req, res, next) => {
           endDate: { [require('sequelize').Op.gt]: now }
         }
       });
-      res.locals.subscriptionActive = Boolean(active);
+      if (active) {
+        res.locals.subscriptionActive = true;
+        const label =
+          active.type === 'daily'
+            ? 'Premium · Jour'
+            : active.type === 'quarter'
+            ? 'Premium · Pass CAN'
+            : 'Premium';
+        res.locals.subscriptionBadge = {
+          label,
+          type: active.type,
+          endDate: active.endDate
+        };
+      }
     } catch (err) {
       console.error('[session] Erreur vérif abonnement actif:', err);
     }
@@ -237,7 +264,6 @@ async function ensureTestUsers() {
     if (!active) {
       await Subscription.create({
         userId: user.id,
-        plan: 'premium',
         type: 'quarter',
         price: 6.99,
         status: 'active',

@@ -149,6 +149,14 @@ router.post('/register', async (req, res) => {
       }
     }
 
+    // Email de bienvenue
+    sendMail({
+      to: user.email,
+      subject: 'Bienvenue sur OLYMP',
+      html: `<h2>Bienvenue ${user.fullName || ''} !</h2><p>Ton compte est créé. Tu peux accéder à ton espace et choisir un abonnement pour profiter du streaming.</p><p><a href="${req.protocol}://${req.get('host')}/payment/choose">Choisir mon abonnement</a></p>`,
+      text: `Bienvenue ${user.fullName || ''} ! Ton compte est créé. Choisis ton abonnement ici : ${req.protocol}://${req.get('host')}/payment/choose`
+    }).catch(err => console.error('Send welcome email error:', err));
+
     // Plus de confirmation : on connecte et on envoie vers paiement
     req.session.user = { id: user.id, email: user.email, fullName: user.fullName };
     res.redirect('/payment/choose');
@@ -229,9 +237,13 @@ router.post('/forgot-password', async (req, res) => {
 
   sendMail({
     to: user.email,
-    subject: 'Réinitialisation de mot de passe OLYMP',
-    text: `Réinitialise ton mot de passe : ${resetUrl}`,
-    html: `<p>Tu as demandé à réinitialiser ton mot de passe.</p><p><a href="${resetUrl}">Clique ici</a> (valide 1h).</p>`
+    subject: 'Réinitialise ton mot de passe OLYMP',
+    text: `Bonjour ${user.fullName || ''},\n\nTu as demandé à réinitialiser ton mot de passe.\nLien (valide 1h) : ${resetUrl}\n\nSi tu n’es pas à l’origine de cette demande, ignore ce message.`,
+    html: `<h2>Réinitialise ton mot de passe</h2>
+           <p>Bonjour ${user.fullName || ''},</p>
+           <p>Tu as demandé à réinitialiser ton mot de passe.</p>
+           <p><a href="${resetUrl}">Clique ici</a> (lien valable 1h).</p>
+           <p>Si tu n’es pas à l’origine de cette demande, ignore ce message.</p>`
   }).catch(err => console.error('Send reset email error:', err));
 
   req.flash('success', 'Si un compte existe, un email a été envoyé.');
@@ -320,10 +332,14 @@ router.get('/verify', async (req, res) => {
 });
 
 router.post('/reset-password', async (req, res) => {
-  const { token, password } = req.body;
-  if (!token || !password) {
+  const { token, password, passwordConfirm } = req.body;
+  if (!token || !password || !passwordConfirm) {
     req.flash('error', 'Données manquantes');
     return res.redirect('/login');
+  }
+  if (password !== passwordConfirm) {
+    req.flash('error', 'Les mots de passe ne correspondent pas.');
+    return res.redirect(`/reset-password?token=${encodeURIComponent(token)}`);
   }
   const hash = crypto.createHash('sha256').update(token).digest('hex');
   const user = await User.findOne({

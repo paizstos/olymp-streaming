@@ -1,5 +1,6 @@
 const express = require('express');
-const { Subscription } = require('../models');
+const { Subscription, User } = require('../models');
+const { sendMail } = require('../services/mailer');
 const { ensureAuth } = require('./utils');
 
 const router = express.Router();
@@ -36,6 +37,16 @@ router.post('/subscribe', ensureAuth, async (req, res) => {
     status: 'active',
     userId: req.session.user.id
   });
+
+  // Email de confirmation d'abonnement
+  const user = await User.findByPk(req.session.user.id);
+  const offerName = plan === 'daily' ? 'Premium · Jour' : plan === 'quarter' ? 'Premium · Pass CAN' : 'Premium';
+  sendMail({
+    to: user?.email,
+    subject: `Confirmation abonnement ${offerName}`,
+    html: `<h2>Merci pour ton abonnement ${offerName}</h2><p>Ton accès est actif jusqu’au ${end.toISOString().slice(0,10)}.</p><p>Bon streaming sur OLYMP !</p>`,
+    text: `Merci pour ton abonnement ${offerName}. Actif jusqu’au ${end.toISOString().slice(0,10)}. Bon streaming sur OLYMP !`
+  }).catch(err => console.error('Send subscription email error:', err));
 
   // Ici tu intégrerais plus tard IllicoCash / Rawbank
   req.flash('success', 'Abonnement activé (simulation de paiement réussie)');

@@ -2,6 +2,9 @@
   <div class="auth-card">
     <h2>Connexion</h2>
     <p class="auth-subtitle">Reprends le match là où tu t’es arrêté.</p>
+    <% if (typeof error !== 'undefined' && error && error.length) { %>
+      <div class="flash flash-error" style="margin-bottom:10px;"><%= error[0] %></div>
+    <% } %>
 
     <form method="POST" action="/login" class="form">
       <label>Email

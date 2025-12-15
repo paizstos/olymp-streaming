@@ -13,7 +13,9 @@
       <div class="nav-user-block">
         <span class="nav-avatar" style="background-image:url('<%= currentUser.avatarUrl || '/images/logo_simple_192.png' %>')"></span>
         <span class="nav-username">Bonjour, <%= currentUser.fullName %></span>
-        <% if (subscriptionActive) { %><span class="badge-premium">Premium</span><% } %>
+        <% if (subscriptionActive) { %>
+          <span class="badge-premium"><%= subscriptionBadge?.label || 'Premium' %></span>
+        <% } %>
       </div>
       <a href="/" class="nav-link nav-icon">Accueil</a>
       <a href="/leopards" class="nav-link nav-icon">Les Léopards RDC <span class="badge-exclu">Exclusif</span></a>
@@ -22,25 +24,17 @@
       <a href="/business" class="nav-link nav-icon">Business</a>
       <a href="/videos" class="nav-link nav-icon">Streaming</a>
       <div class="nav-mega">
-        <button class="nav-link nav-mega-trigger" type="button">Découvrir ▾</button>
+        <button class="nav-link nav-mega-trigger" type="button">Mon espace ▾</button>
         <div class="mega-panel">
           <div>
-            <p class="mega-title">Catégories</p>
-            <a href="/leopards">Les Léopards</a>
-            <a href="/sport">Sport</a>
-            <a href="/music">Musique</a>
-            <a href="/business">Business</a>
+            <p class="mega-title">Compte</p>
+            <a href="/account">Mon espace</a>
+            <a href="/logout" class="danger">Déconnexion</a>
           </div>
           <div>
             <p class="mega-title">Accès rapide</p>
-            <a href="/videos">Streaming</a>
             <a href="/extraits">Extraits gratuits</a>
             <a href="/payment/choose">Abonnement</a>
-          </div>
-          <div>
-            <p class="mega-title">Compte</p>
-            <a href="/account">Mon profil</a>
-            <a href="/logout" class="danger">Déconnexion</a>
           </div>
         </div>
       </div>
@@ -53,6 +47,8 @@
           <% } else { %>
             <a href="/videos">Accéder au streaming</a>
           <% } %>
+          <a href="/extraits">Extraits gratuits</a>
+          <a href="/payment/choose">Abonnement</a>
           <a href="/logout" class="danger">Déconnexion</a>
         </div>
       </div>

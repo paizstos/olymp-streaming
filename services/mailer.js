@@ -14,10 +14,11 @@ let transporter = null;
 
 if (SMTP_HOST) {
   transporter = nodemailer.createTransport({
+    service: SMTP_HOST.includes('gmail') ? 'gmail' : undefined,
     host: SMTP_HOST,
     port: SMTP_PORT ? Number(SMTP_PORT) : 587,
     secure: false, // STARTTLS sur 587
-    requireTLS: true,
+    requireTLS: false,
     auth: SMTP_USER ? { user: SMTP_USER, pass: SMTP_PASS } : undefined,
     tls: { rejectUnauthorized: false }
   });
@@ -29,13 +30,18 @@ async function sendMail({ to, subject, html, text }) {
     return;
   }
 
-  await transporter.sendMail({
-    from: DEFAULT_FROM,
-    to,
-    subject,
-    text,
-    html
-  });
+  try {
+    await transporter.sendMail({
+      from: DEFAULT_FROM,
+      to,
+      subject,
+      text,
+      html
+    });
+  } catch (err) {
+    console.error('[mailer] sendMail error:', err);
+    throw err;
+  }
 }
 
 module.exports = { sendMail };

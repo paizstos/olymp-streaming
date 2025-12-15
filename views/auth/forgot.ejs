@@ -2,13 +2,13 @@
 <section class="auth-container">
   <div class="auth-card">
     <h2>Mot de passe oublié</h2>
-    <p class="auth-subtitle">On t’envoie un lien de réinitialisation (valable 1h).</p>
+    <p class="auth-subtitle">On t’envoie un lien de réinitialisation (valable 1h). Si tu ne reçois rien, tu pourras redemander dans 2 minutes.</p>
 
-    <form method="POST" action="/forgot-password" class="form">
+    <form method="POST" action="/forgot-password" class="form" id="forgotForm">
       <label>Email
         <input type="email" name="email" required>
       </label>
-      <button class="btn btn-primary btn-full" type="submit">Envoyer le lien</button>
+      <button class="btn btn-primary btn-full" type="submit" id="forgotSubmit">Envoyer le lien</button>
     </form>
 
     <p class="auth-footer">
@@ -16,4 +16,27 @@
     </p>
   </div>
 </section>
+
+<script>
+  (() => {
+    const form = document.getElementById('forgotForm');
+    const submit = document.getElementById('forgotSubmit');
+    if (!form || !submit) return;
+    form.addEventListener('submit', () => {
+      submit.disabled = true;
+      let remaining = 120;
+      const orig = submit.textContent;
+      const timer = setInterval(() => {
+        remaining -= 1;
+        if (remaining <= 0) {
+          clearInterval(timer);
+          submit.disabled = false;
+          submit.textContent = orig;
+        } else {
+          submit.textContent = `Réessayer dans ${remaining}s`;
+        }
+      }, 1000);
+    });
+  })();
+</script>
 ` }) %>
