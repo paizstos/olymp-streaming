@@ -9,7 +9,6 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@vimeo/vimeo": "^3.0.3",
     "bcrypt": "^5.1.1",
     "connect-flash": "^0.1.1",
     "ejs": "^3.1.10",

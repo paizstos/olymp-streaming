@@ -1,12 +1,12 @@
 <header class="navbar">
   <div class="navbar-left">
     <a href="/dash" class="brand">
-      <span class="brand-logo"><img class ="logoprincipal" src="/images/logo_simple.PNG" alt="logo"></span>
+      <span class="brand-logo"><img class="logoprincipal" src="/images/logo_simple.PNG" alt="logo"></span>
       <span class="brand-text">OLYMP<span class="brand-sub">DIGITAL MEDIA</span></span>
     </a>
   </div>
 
-  <button class="nav-hamburger" id="navHamburger" type="button" aria-label="Menu">☰</button>
+  <button class="nav-hamburger" id="navHamburger" type="button" aria-label="Menu">&#9776;</button>
 
   <nav class="navbar-right" id="navbarLinks">
     <% if (typeof currentUser !== 'undefined' && currentUser) { %>
@@ -18,26 +18,11 @@
         <% } %>
       </div>
       <a href="/" class="nav-link nav-icon">Accueil</a>
-      <a href="/leopards" class="nav-link nav-icon">Les Léopards RDC <span class="badge-exclu">Exclusif</span></a>
+      <a href="/leopards" class="nav-link nav-icon">Les Leopards RDC <span class="badge-exclu">Exclusif</span></a>
       <a href="/sport" class="nav-link nav-icon">Sport</a>
       <a href="/music" class="nav-link nav-icon">Musique</a>
       <a href="/business" class="nav-link nav-icon">Business</a>
       <a href="/videos" class="nav-link nav-icon">Streaming</a>
-      <div class="nav-mega">
-        <button class="nav-link nav-mega-trigger" type="button">Mon espace ▾</button>
-        <div class="mega-panel">
-          <div>
-            <p class="mega-title">Compte</p>
-            <a href="/account">Mon espace</a>
-            <a href="/logout" class="danger">Déconnexion</a>
-          </div>
-          <div>
-            <p class="mega-title">Accès rapide</p>
-            <a href="/extraits">Extraits gratuits</a>
-            <a href="/payment/choose">Abonnement</a>
-          </div>
-        </div>
-      </div>
       <div class="nav-menu-wrapper">
         <button class="nav-btn nav-btn-outline nav-menu-trigger" type="button" aria-label="Profil">Mon espace</button>
         <div class="nav-menu" id="navMenu">
@@ -45,22 +30,22 @@
           <% if (!subscriptionActive) { %>
             <a href="/payment/choose">Prendre un abonnement</a>
           <% } else { %>
-            <a href="/videos">Accéder au streaming</a>
+            <a href="/videos">Acceder au streaming</a>
           <% } %>
           <a href="/extraits">Extraits gratuits</a>
           <a href="/payment/choose">Abonnement</a>
-          <a href="/logout" class="danger">Déconnexion</a>
+          <a href="/logout" class="danger">Deconnexion</a>
         </div>
       </div>
-    <%} else { %>
+    <% } else { %>
       <a href="/" class="nav-link nav-icon">Accueil</a>
-      <a href="/leopards" class="nav-link nav-icon">Les Léopards RDC <span class="badge-exclu">Exclusif</span></a>
+      <a href="/leopards" class="nav-link nav-icon">Les Leopards RDC <span class="badge-exclu">Exclusif</span></a>
       <a href="/sport" class="nav-link nav-icon">Sport</a>
       <a href="/music" class="nav-link nav-icon">Musique</a>
       <a href="/business" class="nav-link nav-icon">Business</a>
       <a href="/extraits" class="nav-link nav-icon">Voir des extraits</a>
       <a href="/login" class="nav-btn nav-btn-outline nav-pill">Connexion</a>
-      <a href="/register" class="nav-btn nav-btn-primary nav-pill">S’inscrire</a>
+      <a href="/register" class="nav-btn nav-btn-primary nav-pill">S'inscrire</a>
     <% } %>
   </nav>
 </header>
@@ -71,8 +56,6 @@
   const trigger = document.querySelector('.nav-menu-trigger');
   const hamburger = document.getElementById('navHamburger');
   const links = document.getElementById('navbarLinks');
-  const mega = document.querySelector('.nav-mega');
-  const megaPanel = document.querySelector('.mega-panel');
 
   const closeMenu = () => menu && menu.classList.remove('open');
 
@@ -82,19 +65,6 @@
       menu.classList.toggle('open');
     });
     document.addEventListener('click', closeMenu);
-  }
-
-  if (mega && megaPanel) {
-    const toggle = () => mega.classList.toggle('open');
-    mega.addEventListener('mouseenter', () => mega.classList.add('open'));
-    mega.addEventListener('mouseleave', () => mega.classList.remove('open'));
-    mega.querySelector('.nav-mega-trigger')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggle();
-    });
-    document.addEventListener('click', (e) => {
-      if (!mega.contains(e.target)) mega.classList.remove('open');
-    });
   }
 
   if (hamburger && links) {

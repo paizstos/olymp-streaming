@@ -210,7 +210,7 @@ async function patchUserSchema() {
       birthDate: { type: DataTypes.DATEONLY, allowNull: true },
       avatarUrl: { type: DataTypes.STRING, allowNull: true },
       emailVerified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
-      googleId: { type: DataTypes.STRING, allowNull: true, unique: true },
+      googleId: { type: DataTypes.STRING, allowNull: true },
       verifyToken: { type: DataTypes.STRING, allowNull: true },
       verifyTokenExpires: { type: DataTypes.DATE, allowNull: true },
       resetToken: { type: DataTypes.STRING, allowNull: true },
@@ -277,7 +277,7 @@ async function ensureTestUsers() {
 
 // Sync DB puis start
 const start = () => {
-  const alter = true; // aligne le schéma (ajoute les colonnes manquantes type firstName, lastName…)
+  const alter = false; // les colonnes manquantes sont ajoutees par patchUserSchema(), compatible SQLite
   sequelize
     .sync({ alter })
     .then(() => patchUserSchema())

@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title><%= video.title %> – OLYMP Streaming</title>
+  <title><%= video.title %> - OLYMP Streaming</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -14,40 +14,33 @@
     <main class="page-wrapper video-main">
       <%- include('../partials/flash') %>
 
-<% if (typeof video === 'undefined' || !video) { %>
-  <p>Vidéo introuvable.</p>
-<% } else { %>
-  <div class="video-player-wrapper">
-      <% if (video.isLive) { %>
-                <span class="live-badge large">STREAM EN DIRECT</span>
-              <% } %>
-      <a class="btn btn-ghost" href="/videos">← Retour aux vidéos</a>
-    <div class="video-aspect">
-      <% if (video.videoFileUrl) { %>
-        <video
-          controls
-          playsinline
-          autoplay
-          poster="<%= video.thumbnailUrl %>"
-          style="width:100%; height:100%; object-fit:cover; background:#000; border-radius:12px;"
-        >
-          <source src="<%= video.videoFileUrl %>" type="video/mp4">
-          Votre navigateur ne supporte pas la lecture vidéo HTML5.
-        </video>
+      <% if (typeof video === 'undefined' || !video) { %>
+        <p>Video introuvable.</p>
       <% } else { %>
-        <iframe
-          src="<%= video.embedUrl %>"
-          frameborder="0"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowfullscreen>
-        </iframe>
+        <div class="video-player-wrapper">
+          <% if (video.isLive) { %>
+            <span class="live-badge large">EN DIRECT</span>
+          <% } %>
+          <a class="btn btn-ghost" href="/videos">Retour aux videos</a>
+          <div class="video-aspect">
+            <iframe
+              src="<%= video.embedUrl %>"
+              title="<%= video.title %>"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="video-player-meta">
+            <h1><%= video.title %></h1>
+            <% if (video.description) { %>
+              <p><%= video.description %></p>
+            <% } %>
+          </div>
+        </div>
       <% } %>
-    </div>
-  </div>
-<% } %>
-<%- include('../partials/pub') %>
 
-
+      <%- include('../partials/pub') %>
     </main>
   </div>
 
