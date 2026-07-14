@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
 
 <section class="account-grid enhanced">
-  <form class="account-card account-card--wide" method="POST" action="/account" enctype="multipart/form-data">
+  <form class="account-card account-card--wide" method="POST" action="/account">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <div class="form-two-cols">
       <label>Prénom
@@ -87,13 +87,13 @@
 </section>
 
 <!-- Modal de recadrage -->
-<div class="cropper-modal" id="cropperModal" aria-hidden="true">
-  <div class="cropper-modal__content">
+<div class="avatar-cropper-modal" id="cropperModal" aria-hidden="true">
+  <div class="avatar-cropper-modal__content">
     <h3>Recadre ta photo</h3>
-    <div class="cropper-modal__canvas">
+    <div class="avatar-cropper-modal__canvas">
       <img id="cropperImage" alt="Aperçu" style="max-width:100%; display:block;">
     </div>
-    <div class="cropper-modal__actions">
+    <div class="avatar-cropper-modal__actions">
       <button type="button" class="btn btn-ghost" id="cropperCancel">Annuler</button>
       <button type="button" class="btn btn-primary" id="cropperValidate">Valider</button>
     </div>

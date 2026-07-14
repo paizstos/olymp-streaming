@@ -64,17 +64,28 @@ document.addEventListener('DOMContentLoaded', () => {
   applyItem(currentIndex);
   startRotation();
 
-  // Click sur une carte => on affiche cette vidéo + on reset le timer
+  function previewItem(index, shouldStopRotation = true) {
+    currentIndex = index;
+    applyItem(currentIndex);
+    if (shouldStopRotation) stopRotation();
+  }
+
+  // Souris, tactile et clavier => aperçu immédiat en arrière-plan.
   carouselItems.forEach((item, index) => {
     item.addEventListener('mouseenter', () => {
-      currentIndex = index;
-      applyItem(currentIndex);
-      stopRotation();
+      previewItem(index);
+    });
+
+    item.addEventListener('touchstart', () => {
+      previewItem(index);
+    }, { passive: true });
+
+    item.addEventListener('focusin', () => {
+      previewItem(index);
     });
 
     item.addEventListener('click', () => {
-      currentIndex = index;
-      applyItem(currentIndex);
+      previewItem(index, false);
       startRotation();
     });
   });
@@ -82,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pause la rotation au survol du carrousel pour laisser le temps de lire
   if (heroCarousel) {
     heroCarousel.addEventListener('mouseenter', stopRotation);
+    heroCarousel.addEventListener('touchstart', stopRotation, { passive: true });
     heroCarousel.addEventListener('mouseleave', startRotation);
   }
 });
