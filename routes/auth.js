@@ -149,12 +149,20 @@ router.post('/register', async (req, res) => {
       }
     }
 
+    const appUrl = `${req.protocol}://${req.get('host')}`;
+
     // Email de bienvenue
     sendMail({
       to: user.email,
       subject: 'Bienvenue sur OLYMP',
-      html: `<h2>Bienvenue ${user.fullName || ''} !</h2><p>Ton compte est créé. Tu peux accéder à ton espace et choisir un abonnement pour profiter du streaming.</p><p><a href="${req.protocol}://${req.get('host')}/payment/choose">Choisir mon abonnement</a></p>`,
-      text: `Bienvenue ${user.fullName || ''} ! Ton compte est créé. Choisis ton abonnement ici : ${req.protocol}://${req.get('host')}/payment/choose`
+      html: `
+        <h2>Bienvenue ${user.fullName || ''} !</h2>
+        <p>Ton compte OLYMP a bien été créé.</p>
+        <p>Tu peux maintenant choisir ton abonnement et profiter du streaming.</p>
+        <p><a href="${appUrl}/payment/choose">Choisir mon abonnement</a></p>
+        <p>À très vite sur OLYMP.</p>
+      `,
+      text: `Bienvenue ${user.fullName || ''} ! Ton compte OLYMP a bien été créé. Choisis ton abonnement ici : ${appUrl}/payment/choose`
     }).catch(err => console.error('Send welcome email error:', err));
 
     // Plus de confirmation : on connecte et on envoie vers paiement
