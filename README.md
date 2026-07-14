@@ -38,7 +38,7 @@ npm test
 
 ## Routes principales
 - Public : `/`, `/extraits`, `/about`, `/contact`, auth (login/register/forgot/reset/verify)
-- Protegees (login + abonnement actif) : `/videos`, `/videos/:id`, `/account`, `/payment/*`, `/sport`, `/music`, `/business`, `/leopards`
+- Protegees (login + abonnement actif) : `/videos`, `/videos/:id`, `/account`, `/payment/*`, `/sport`, `/music`, `/business`, `/comedie`, `/leopards`
 
 ## Notes
 - SQLite en dev (`olymp.db`), Postgres si `DATABASE_URL`.

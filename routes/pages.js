@@ -23,6 +23,10 @@ router.get('/business', ensureActiveSubscription, (req, res) => {
   res.render('pages/business', { comingSoon: true });
 });
 
+router.get('/comedie', ensureActiveSubscription, (req, res) => {
+  res.render('pages/comedie', { comingSoon: true });
+});
+
 router.get('/sport', (req, res) => {
   res.render('pages/sport', { comingSoon: true });
 });

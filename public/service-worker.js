@@ -1,6 +1,5 @@
-const CACHE_NAME = 'olymp-pwa-v3';
+const CACHE_NAME = 'olymp-pwa-v4';
 const CORE_ASSETS = [
-  '/',
   '/css/style.css',
   '/js/homeLanding.js',
   '/js/goalOverlay.js',
@@ -29,6 +28,11 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
+
+  if (event.request.mode === 'navigate') {
+    event.respondWith(fetch(event.request).catch(() => caches.match('/')));
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then(cached => {
