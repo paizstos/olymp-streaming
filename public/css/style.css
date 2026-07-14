@@ -1654,6 +1654,12 @@ textarea:focus-visible {
   background: rgba(1, 181, 116, 0.9);
 }
 
+.hero-carousel-item.inline-video-ready .hero-carousel-play {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.92);
+}
+
 .hero-carousel-title {
   margin: 0;
   font-size: 14px;
