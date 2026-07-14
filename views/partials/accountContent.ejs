@@ -56,7 +56,7 @@
       <p>Gère ton offre et tes moyens de paiement.</p>
       <% if (typeof subscription !== 'undefined' && subscription) { %>
         <p class="mini-list">
-          Offre : <strong><%= subscription.type === 'daily' ? 'Premium · Jour' : subscription.type === 'quarter' ? 'Premium · Pass CAN' : 'Premium' %></strong><br>
+          Offre : <strong><%= subscription.type === 'daily' ? 'Premium · Jour' : subscription.type === 'quarter' ? 'Premium · Pass 3 mois' : 'Premium' %></strong><br>
           Début : <%= subscription.startDate ? subscription.startDate.toISOString().slice(0,10) : '-' %><br>
           Fin : <%= subscription.endDate ? subscription.endDate.toISOString().slice(0,10) : '-' %>
         </p>

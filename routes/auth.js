@@ -1,11 +1,22 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 const { User, NewsletterSignup } = require('../models');
 const { sendMail } = require('../services/mailer');
 const { passport, googleConfigured } = require('../services/passport');
 
 const router = express.Router();
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 // GET /login
 router.get('/dash' ,(req, res) => {
@@ -149,20 +160,84 @@ router.post('/register', async (req, res) => {
       }
     }
 
-    const appUrl = `${req.protocol}://${req.get('host')}`;
+    const appUrl = process.env.PUBLIC_APP_URL || `${req.protocol}://${req.get('host')}`;
+    const logoPath = path.join(__dirname, '..', 'public', 'images', 'logo_simple_192.png');
+    const logoAttachment = fs.existsSync(logoPath)
+      ? [{
+          filename: 'olymp-logo.png',
+          content: fs.readFileSync(logoPath),
+          contentType: 'image/png',
+          inlineContentId: 'olymp-logo'
+        }]
+      : [];
+    const displayName = escapeHtml(user.fullName || 'Bienvenue');
+    const paymentUrl = `${appUrl}/payment/choose`;
 
     // Email de bienvenue
     sendMail({
       to: user.email,
       subject: 'Bienvenue sur OLYMP',
       html: `
-        <h2>Bienvenue ${user.fullName || ''} !</h2>
-        <p>Ton compte OLYMP a bien été créé.</p>
-        <p>Tu peux maintenant choisir ton abonnement et profiter du streaming.</p>
-        <p><a href="${appUrl}/payment/choose">Choisir mon abonnement</a></p>
-        <p>À très vite sur OLYMP.</p>
+        <!doctype html>
+        <html lang="fr">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Bienvenue sur OLYMP</title>
+          </head>
+          <body style="margin:0;padding:0;background:#020c17;color:#f7f9fc;font-family:Arial,Helvetica,sans-serif;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#020c17;margin:0;padding:32px 16px;">
+              <tr>
+                <td align="center">
+                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;background:#031a30;border:1px solid rgba(82,229,163,0.22);border-radius:18px;overflow:hidden;">
+                    <tr>
+                      <td style="padding:28px 28px 18px;background:#021528;border-bottom:1px solid rgba(255,255,255,0.08);">
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td style="width:72px;vertical-align:middle;">
+                              <img src="cid:olymp-logo" width="56" height="56" alt="OLYMP" style="display:block;border-radius:14px;background:#ffffff;">
+                            </td>
+                            <td style="vertical-align:middle;">
+                              <p style="margin:0;color:#52e5a3;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">OLYMP Digital Media</p>
+                              <h1 style="margin:6px 0 0;color:#ffffff;font-size:26px;line-height:1.2;font-weight:800;">Bienvenue sur OLYMP</h1>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:32px 28px 10px;">
+                        <p style="margin:0 0 18px;color:#f7f9fc;font-size:18px;line-height:1.5;">Bonjour ${displayName},</p>
+                        <p style="margin:0 0 16px;color:#dbe7ff;font-size:16px;line-height:1.7;">Ton compte OLYMP a bien été créé. Tu peux maintenant choisir ton abonnement et accéder aux contenus streaming, sport, musique, business et exclusivités OLYMP.</p>
+                        <p style="margin:0 0 26px;color:#a8b4c9;font-size:15px;line-height:1.7;">Merci de rejoindre la communauté. On te prépare une expérience pensée pour les fans, avec des lives, des coulisses et des contenus premium.</p>
+                        <table role="presentation" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td style="border-radius:999px;background:#01b574;">
+                              <a href="${paymentUrl}" style="display:inline-block;padding:14px 22px;color:#021528;text-decoration:none;font-size:15px;font-weight:800;">Choisir mon abonnement</a>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:18px 28px 30px;">
+                        <p style="margin:0;color:#7c879c;font-size:13px;line-height:1.6;">Si le bouton ne fonctionne pas, copie ce lien dans ton navigateur :<br><a href="${paymentUrl}" style="color:#52e5a3;text-decoration:none;">${paymentUrl}</a></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:20px 28px;background:#020c17;border-top:1px solid rgba(255,255,255,0.08);">
+                        <p style="margin:0;color:#a8b4c9;font-size:13px;line-height:1.6;">À très vite sur OLYMP.</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </body>
+        </html>
       `,
-      text: `Bienvenue ${user.fullName || ''} ! Ton compte OLYMP a bien été créé. Choisis ton abonnement ici : ${appUrl}/payment/choose`
+      text: `Bienvenue ${user.fullName || ''} ! Ton compte OLYMP a bien été créé. Choisis ton abonnement ici : ${paymentUrl}`,
+      attachments: logoAttachment
     }).catch(err => console.error('Send welcome email error:', err));
 
     // Plus de confirmation : on connecte et on envoie vers paiement

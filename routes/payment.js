@@ -40,7 +40,7 @@ router.post('/subscribe', ensureAuth, async (req, res) => {
 
   // Email de confirmation d'abonnement
   const user = await User.findByPk(req.session.user.id);
-  const offerName = plan === 'daily' ? 'Premium · Jour' : plan === 'quarter' ? 'Premium · Pass CAN' : 'Premium';
+  const offerName = plan === 'daily' ? 'Premium · Jour' : plan === 'quarter' ? 'Premium · Pass 3 mois' : 'Premium';
   sendMail({
     to: user?.email,
     subject: `Confirmation abonnement ${offerName}`,

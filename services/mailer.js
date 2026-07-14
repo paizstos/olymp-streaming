@@ -33,7 +33,7 @@ if (!resend && SMTP_HOST) {
   });
 }
 
-async function sendMail({ to, subject, html, text }) {
+async function sendMail({ to, subject, html, text, attachments }) {
   if (!to) {
     console.log('[mailer] destinataire manquant, email non envoye:', { subject });
     return;
@@ -47,6 +47,7 @@ async function sendMail({ to, subject, html, text }) {
         subject,
         text,
         html,
+        attachments,
         replyTo: RESEND_REPLY_TO || undefined
       });
       return;
@@ -67,7 +68,8 @@ async function sendMail({ to, subject, html, text }) {
       to,
       subject,
       text,
-      html
+      html,
+      attachments
     });
   } catch (err) {
     console.error('[mailer] SMTP sendMail error:', err);

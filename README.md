@@ -14,6 +14,7 @@ npm install
 ## Configuration
 Copie `.env.example` en `.env` et remplis les variables :
 - `SESSION_SECRET`, `NODE_ENV`, `ADMIN_GOAL_TOKEN`
+- `PUBLIC_APP_URL` avec l'URL publique du site, utilisee pour les liens et le logo dans les emails.
 - Resend (`RESEND_API_KEY`, `RESEND_FROM`, `RESEND_REPLY_TO`) pour les emails. `RESEND_FROM` doit utiliser un domaine verifie dans Resend.
 - SMTP (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`) reste disponible en fallback si Resend n'est pas configure.
 - Google OAuth (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL`)
