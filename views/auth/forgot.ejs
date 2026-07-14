@@ -5,6 +5,7 @@
     <p class="auth-subtitle">On t’envoie un lien de réinitialisation (valable 1h). Si tu ne reçois rien, tu pourras redemander dans 2 minutes.</p>
 
     <form method="POST" action="/forgot-password" class="form" id="forgotForm">
+      <input type="hidden" name="_csrf" value="${csrfToken}">
       <label>Email
         <input type="email" name="email" required>
       </label>
@@ -33,7 +34,7 @@
           submit.disabled = false;
           submit.textContent = orig;
         } else {
-          submit.textContent = `Réessayer dans ${remaining}s`;
+          submit.textContent = 'Réessayer dans ' + remaining + 's';
         }
       }, 1000);
     });

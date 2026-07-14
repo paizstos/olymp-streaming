@@ -7,14 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const heroTag = document.getElementById('heroTag');
   const heroMatchInfo = document.getElementById('heroMatchInfo');
   const heroWatchBtn = document.getElementById('heroWatchBtn');
-  const heroExtractBtn = document.getElementById('heroExtractBtn');
-
-  // Modal
-  const extractModal = document.getElementById('heroExtractModal');
-  const extractBackdrop = document.getElementById('heroExtractBackdrop');
-  const extractClose = document.getElementById('heroExtractClose');
-  const extractVideo = document.getElementById('heroExtractVideo');
-  const extractSource = document.getElementById('heroExtractSource');
 
   let currentIndex = 0;
   let rotationTimer = null;
@@ -51,8 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
       heroWatchBtn.href = `/videos/${videoId}`;
     }
 
-    // Le bouton "Voir l’extrait" utilisera la même vidéo
-    heroExtractBtn.dataset.videoUrl = videoUrl || '';
   }
 
   function startRotation() {
@@ -76,6 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Click sur une carte => on affiche cette vidéo + on reset le timer
   carouselItems.forEach((item, index) => {
+    item.addEventListener('mouseenter', () => {
+      currentIndex = index;
+      applyItem(currentIndex);
+      stopRotation();
+    });
+
     item.addEventListener('click', () => {
       currentIndex = index;
       applyItem(currentIndex);
@@ -87,43 +83,5 @@ document.addEventListener('DOMContentLoaded', () => {
   if (heroCarousel) {
     heroCarousel.addEventListener('mouseenter', stopRotation);
     heroCarousel.addEventListener('mouseleave', startRotation);
-  }
-
-  // Bouton "Voir l’extrait"
-  if (heroExtractBtn && extractModal && extractVideo && extractSource) {
-    function openExtractModal() {
-      const url = heroExtractBtn.dataset.videoUrl;
-      if (!url) return;
-      extractSource.src = url;
-      extractVideo.load();
-      extractModal.classList.add('open');
-      extractVideo.play().catch(() => {});
-      stopRotation();
-    }
-
-    function closeExtractModal() {
-      extractModal.classList.remove('open');
-      extractVideo.pause();
-      startRotation();
-    }
-
-    heroExtractBtn.addEventListener('click', openExtractModal);
-    extractBackdrop.addEventListener('click', closeExtractModal);
-    extractClose.addEventListener('click', closeExtractModal);
-  }
-
-  // Effet d’apparition pour la section stats (IntersectionObserver)
-  const statsSection = document.getElementById('leopardsStats');
-  if (statsSection && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          statsSection.classList.add('visible');
-          observer.disconnect();
-        }
-      });
-    }, { threshold: 0.2 });
-
-    observer.observe(statsSection);
   }
 });

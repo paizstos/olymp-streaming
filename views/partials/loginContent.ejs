@@ -7,17 +7,13 @@
     <% } %>
 
     <form method="POST" action="/login" class="form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <label>Email
         <input type="email" name="email" required value="<%= typeof prefillEmail !== 'undefined' ? prefillEmail : '' %>">
       </label>
 
       <label>Mot de passe
         <input type="password" name="password" required>
-      </label>
-
-      <label class="checkbox">
-        <input type="checkbox" name="newsletter" value="1">
-        S’abonner à la newsletter OLYMP
       </label>
 
       <button class="btn btn-primary btn-full" type="submit">Se connecter</button>

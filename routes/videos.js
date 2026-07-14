@@ -4,8 +4,17 @@ const { ensureActiveSubscription } = require('./utils');
 
 const router = express.Router();
 
-router.get('/', ensureActiveSubscription, async (req, res) => {
+async function renderVideosIndex(req, res) {
   try {
+    if (!youtubeClient.configured) {
+      return res.render('videos/index', {
+        videos: [],
+        liveVideo: null,
+        channelUrl: youtubeClient.channelUrl,
+        youtubeMissingConfig: youtubeClient.getMissingConfig()
+      });
+    }
+
     const [videos, liveVideo] = await Promise.all([
       youtubeClient.listChannelVideos(),
       youtubeClient.getLiveVideo()
@@ -21,7 +30,7 @@ router.get('/', ensureActiveSubscription, async (req, res) => {
       channelUrl: youtubeClient.channelUrl
     });
   } catch (err) {
-    console.error('Erreur /videos:', err);
+    console.warn('Erreur /videos:', err.message || err);
     req.flash('error', "Impossible de charger les videos YouTube pour l'instant.");
     res.render('videos/index', {
       videos: [],
@@ -30,10 +39,18 @@ router.get('/', ensureActiveSubscription, async (req, res) => {
       youtubeError: true
     });
   }
-});
+}
+
+router.get('', ensureActiveSubscription, renderVideosIndex);
+router.get('/', ensureActiveSubscription, renderVideosIndex);
 
 router.get('/:id', ensureActiveSubscription, async (req, res) => {
   try {
+    if (!youtubeClient.configured) {
+      req.flash('error', 'Les videos YouTube ne sont pas encore configurees.');
+      return res.redirect('/videos');
+    }
+
     const video = await youtubeClient.getVideoById(req.params.id);
     if (!video) {
       req.flash('error', 'Video introuvable.');

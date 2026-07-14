@@ -4,6 +4,7 @@ const { Op } = require('sequelize');
 function ensureAuth(req, res, next) {
   if (!req.session.user) {
     req.flash('error', 'Veuillez vous connecter pour continuer');
+    if (req.method === 'GET') req.session.returnTo = req.originalUrl;
     return res.redirect('/login');
   }
   next();
@@ -13,6 +14,7 @@ function ensureAuth(req, res, next) {
 async function ensureActiveSubscription(req, res, next) {
   if (!req.session.user) {
     req.flash('error', 'Veuillez vous connecter pour continuer');
+    if (req.method === 'GET') req.session.returnTo = req.originalUrl;
     return res.redirect('/login');
   }
 
@@ -27,7 +29,7 @@ async function ensureActiveSubscription(req, res, next) {
   });
 
   if (!active) {
-    req.flash('error', 'Vous devez avoir un abonnement actif pour accéder au stream');
+    req.flash('error', 'Un abonnement actif est nécessaire pour accéder à cette page.');
     return res.redirect('/payment/choose');
   }
 

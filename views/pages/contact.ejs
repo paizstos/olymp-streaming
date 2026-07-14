@@ -13,6 +13,7 @@
 
 <section class="contact-layout">
   <form class="contact-card" method="POST" action="/contact">
+    <input type="hidden" name="_csrf" value="${csrfToken}">
     <div class="contact-grid">
       <label>Nom complet
         <input type="text" name="fullName" required>

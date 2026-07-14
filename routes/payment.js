@@ -2,6 +2,7 @@ const express = require('express');
 const { Subscription, User } = require('../models');
 const { sendMail } = require('../services/mailer');
 const { ensureAuth } = require('./utils');
+const { Op } = require('sequelize');
 
 const router = express.Router();
 
@@ -15,6 +16,19 @@ router.post('/subscribe', ensureAuth, async (req, res) => {
   const { plan } = req.body; // 'daily' ou 'quarter'
 
   const now = new Date();
+  const existingActive = await Subscription.findOne({
+    where: {
+      userId: req.session.user.id,
+      status: 'active',
+      endDate: { [Op.gt]: now }
+    }
+  });
+
+  if (existingActive) {
+    req.flash('success', 'Ton abonnement est déjà actif.');
+    return res.redirect('/videos');
+  }
+
   let end = new Date(now);
   let price;
 

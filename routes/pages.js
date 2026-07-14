@@ -27,14 +27,23 @@ router.get('/comedie', ensureActiveSubscription, (req, res) => {
   res.render('pages/comedie', { comingSoon: true });
 });
 
-router.get('/sport', (req, res) => {
+router.get('/sport', ensureActiveSubscription, (req, res) => {
   res.render('pages/sport', { comingSoon: true });
 });
 
 router.post('/contact', async (req, res) => {
-  const { fullName, email, topic, message, newsletter } = req.body;
+  const fullName = String(req.body.fullName || '').trim();
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const topic = String(req.body.topic || '').trim();
+  const message = String(req.body.message || '').trim();
+  const { newsletter } = req.body;
+
   if (!fullName || !email || !topic || !message) {
     req.flash('error', 'Merci de remplir tous les champs.');
+    return res.redirect('/contact');
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || message.length > 2000 || fullName.length > 120) {
+    req.flash('error', 'Merci de vérifier les informations saisies.');
     return res.redirect('/contact');
   }
 

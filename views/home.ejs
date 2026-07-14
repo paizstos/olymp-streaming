@@ -69,11 +69,8 @@
 
             <div class="hero-cinema-actions">
               <a id="heroWatchBtn" href="#" class="btn btn-primary hero-watch-btn">
-                ▶ Regarder le match
+                ▶ Regarder la vidéo
               </a>
-              <button id="heroExtractBtn" type="button" class="btn btn-ghost hero-extract-btn">
-                Voir l’extrait
-              </button>
             </div>
           </div>
 
@@ -190,102 +187,6 @@
         </div>
       </div>
     </section>
-
-    <!-- SECTION SCORES / CLASSEMENT LÉOPARDS -->
-    <section class="leopards-stats-section" id="leopardsStats">
-      <div class="leopards-stats-inner">
-        <header class="leopards-stats-header">
-          <div>
-            <p class="leopards-kicker">Résultats récents</p>
-            <h2 style="color: rgb(11, 18, 7)">Les derniers matchs des Léopards</h2>
-            <p class="leopards-subtitle">
-              Exemple de tableau. Plus tard, tu pourras remplir ça avec l’API de scores.
-            </p>
-          </div>
-          <a href="/extraits" class="btn btn-ghost btn-small">
-            Voir les extraits gratuits
-          </a>
-        </header>
-
-        <div class="leopards-last-results">
-          <div class="leopards-score-card">
-            <p class="leopards-score-date">12 juillet 2025</p>
-            <p class="leopards-score-main">
-              <span>RDC</span>
-              <strong>3 – 1</strong>
-              <span>Maroc</span>
-            </p>
-            <p class="leopards-score-label">Match amical</p>
-          </div>
-          <div class="leopards-score-card">
-            <p class="leopards-score-date">8 juillet 2025</p>
-            <p class="leopards-score-main">
-              <span>RDC</span>
-              <strong>1 – 1</strong>
-              <span>Nigeria</span>
-            </p>
-            <p class="leopards-score-label">CAN · Phase de poule</p>
-          </div>
-          <div class="leopards-score-card">
-            <p class="leopards-score-date">4 juillet 2025</p>
-            <p class="leopards-score-main">
-              <span>RDC</span>
-              <strong>2 – 3</strong>
-              <span>Sénégal</span>
-            </p>
-            <p class="leopards-score-label">CAN · Quart de finale</p>
-          </div>
-        </div>
-
-        <div class="leopards-table-wrapper">
-          <h3 class="leopards-table-title">Classement (exemple de groupe)</h3>
-          <table class="leopards-table">
-            <thead>
-              <tr>
-                <th>POS</th>
-                <th>ÉQUIPE</th>
-                <th>MJ</th>
-                <th>V</th>
-                <th>N</th>
-                <th>D</th>
-                <th>BP</th>
-                <th>BC</th>
-                <th>DIFF</th>
-                <th>PTS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td><td>RDC</td><td>3</td><td>2</td><td>1</td><td>0</td><td>7</td><td>3</td><td>+4</td><td>7</td>
-              </tr>
-              <tr>
-                <td>2</td><td>Maroc</td><td>3</td><td>2</td><td>0</td><td>1</td><td>5</td><td>3</td><td>+2</td><td>6</td>
-              </tr>
-              <tr>
-                <td>3</td><td>Nigeria</td><td>3</td><td>1</td><td>1</td><td>1</td><td>3</td><td>3</td><td>0</td><td>4</td>
-              </tr>
-              <tr>
-                <td>4</td><td>Sénégal</td><td>3</td><td>0</td><td>0</td><td>3</td><td>2</td><td>8</td><td>-6</td><td>0</td>
-              </tr>
-            </tbody>
-          </table>
-          <button class="btn btn-primary leopards-table-cta">
-            Voir les stats complètes (plus tard)
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Modal pour "Voir l'extrait" -->
-    <div class="hero-extract-modal" id="heroExtractModal">
-      <div class="hero-extract-backdrop" id="heroExtractBackdrop"></div>
-      <div class="hero-extract-inner">
-        <button class="hero-extract-close" id="heroExtractClose" type="button">✕</button>
-        <video id="heroExtractVideo" class="hero-extract-video" controls autoplay>
-          <source id="heroExtractSource" src="" type="video/mp4">
-        </video>
-      </div>
-    </div>
   </main>
 
   <%- include('partials/goalOverlay') %>
@@ -543,56 +444,6 @@
   font-size: 12px;
 }
 
-/* Modal "Voir l’extrait" */
-
-.hero-extract-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-extract-modal.open {
-  display: flex;
-}
-
-.hero-extract-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-}
-
-.hero-extract-inner {
-  position: relative;
-  z-index: 1;
-  width: min(900px, 94vw);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.85);
-  background: #020814;
-}
-
-.hero-extract-video {
-  width: 100%;
-  display: block;
-}
-
-.hero-extract-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  border: none;
-  background: rgba(3, 18, 40, 0.9);
-  color: #fff;
-  cursor: pointer;
-}
-
 /* Responsive */
 
 @media (max-width: 900px) {
@@ -616,165 +467,6 @@
 
   .hero-cinema-badge {
     align-items: flex-start;
-  }
-}
-
-
-/* =============== Stats + Animations =============*/
-.leopards-stats-section {
-  margin-top: 26px;
-  padding: 26px 0 40px;
-  /*background: linear-gradient(to bottom, #020916, #020814);*/
-  background-color: #ffffff;
-  border-radius: 24px;
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-}
-
-.leopards-stats-section.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.leopards-stats-inner {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-.leopards-stats-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: flex-end;
-  margin-bottom: 18px;
-}
-
-.leopards-kicker {
-  margin: 0 0 4px;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent-gold);
-}
-
-.leopards-stats-header h2 {
-  margin: 0 0 4px;
-}
-
-.leopards-subtitle {
-  margin: 0;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.leopards-last-results {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
-  margin-bottom: 18px;
-  
-}
-
-.leopards-score-card {
-  background: #ffffff;
-  color: #111827;
-  border-radius: 14px;
-  padding: 8px 10px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
-  font-size: 12px;
-}
-
-.leopards-score-date {
-  margin: 0 0 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 10px;
-  color: #6b7280;
-}
-
-.leopards-score-main {
-  margin: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: 13px;
-}
-
-.leopards-score-main strong {
-  font-size: 18px;
-}
-
-.leopards-score-label {
-  margin: 2px 0 0;
-  font-size: 11px;
-  color: #6b7280;
-}
-
-.leopards-table-wrapper {
-  margin-top: 6px;
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 10px 10px 12px;
-  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.22);
-  color: #111827;
-}
-
-.leopards-table-title {
-  margin: 0 0 6px;
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #ef4444;
-}
-
-.leopards-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-
-.leopards-table thead {
-  background: #f9fafb;
-}
-
-.leopards-table th,
-.leopards-table td {
-  padding: 4px 6px;
-  text-align: center;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.leopards-table th:first-child,
-.leopards-table td:first-child {
-  text-align: left;
-}
-
-.leopards-table th:nth-child(2),
-.leopards-table td:nth-child(2) {
-  text-align: left;
-}
-
-.leopards-table tbody tr:nth-child(even) {
-  background: #f9fafb;
-}
-
-.leopards-table-cta {
-  margin-top: 10px;
-  width: 100%;
-}
-
-/* Responsive stats */
-
-@media (max-width: 900px) {
-  .leopards-stats-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .leopards-table {
-    font-size: 11px;
   }
 }
 
@@ -829,26 +521,6 @@
     padding-right: 6px;
   }
 
-  .leopards-stats-section {
-    padding: 18px 0 26px;
-    border-radius: 18px;
-  }
-
-  .leopards-stats-inner {
-    padding: 0 12px;
-  }
-
-  .leopards-last-results {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-
-  .leopards-table-wrapper {
-    overflow-x: auto;
-  }
-
-  .leopards-table {
-    min-width: 520px;
-  }
 }
 
   </style>

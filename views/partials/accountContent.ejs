@@ -14,6 +14,7 @@
 
 <section class="account-grid enhanced">
   <form class="account-card account-card--wide" method="POST" action="/account" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <div class="form-two-cols">
       <label>Prénom
         <input type="text" name="firstName" value="<%= user.firstName || '' %>">
@@ -33,16 +34,24 @@
         <input type="date" name="birthDate" value="<%= user.birthDate || '' %>">
       </label>
     </div>
-    <input type="hidden" name="avatarUrl" id="avatarUrl" value="<%= user.avatarUrl || '' %>">
+    <input
+      type="hidden"
+      name="avatarUrl"
+      id="avatarUrl"
+      value="<%= user.avatarUrl || '' %>"
+      data-cloudinary-cloud="<%= typeof cloudinaryCloudName !== 'undefined' ? cloudinaryCloudName : '' %>"
+      data-cloudinary-preset="<%= typeof cloudinaryUploadPreset !== 'undefined' ? cloudinaryUploadPreset : '' %>"
+    >
 
     <div class="upload-block upload-block--round">
       <div>
         <p class="upload-title">Photo de profil</p>
-        <p class="upload-text">Importe une image (jpg/png). L’aperçu est recadré en cercle comme sur LinkedIn.</p>
+        <p class="upload-text">Importe une image (jpg/png). Elle sera recadrée puis envoyée dans le cloud, pas stockée sur le serveur.</p>
         <label class="btn btn-outline btn-small pill">
           Importer une photo
           <input type="file" id="avatarFile" accept="image/*" hidden>
         </label>
+        <p class="upload-text" id="avatarUploadStatus"></p>
       </div>
       <div class="avatar-preview-round" id="avatarPreview" style="background-image:url('<%= user.avatarUrl || '/images/logo_simple_192.png' %>')"></div>
     </div>

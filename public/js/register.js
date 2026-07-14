@@ -31,13 +31,5 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('change', revealNext);
   revealNext();
 
-  // Scroll doux jusqu’au bouton quand on révèle des champs (meilleure UX mobile)
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((m) => {
-      if (m.type === 'attributes' && m.target.classList.contains('form-step') && !m.target.classList.contains('hidden-step')) {
-        submitBtn?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    });
-  });
-  steps.forEach(step => observer.observe(step, { attributes: true, attributeFilter: ['class'] }));
+  if (submitBtn) submitBtn.disabled = false;
 });

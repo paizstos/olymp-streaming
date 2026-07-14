@@ -935,6 +935,10 @@ textarea:focus-visible {
   font-size: 12px;
 }
 
+.upload-text.text-error {
+  color: #ff9c9c;
+}
+
 .upload-actions {
   display: flex;
   gap: 8px;
@@ -3337,7 +3341,8 @@ textarea:focus-visible {
   position: relative;
   background: radial-gradient(circle at 30% 30%, rgba(1, 181, 116, 0.08), transparent 45%),
     linear-gradient(135deg, #031223, #020914 60%);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   min-height: 100vh;
   padding-bottom: 40px;
 }
@@ -3372,4 +3377,383 @@ textarea:focus-visible {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+/* ===================== Mobile UX pass ===================== */
+@media (max-width: 900px) {
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .navbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+  }
+
+  .navbar-left,
+  .brand {
+    min-width: 0;
+  }
+
+  .brand-text {
+    max-width: 58vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .brand-sub {
+    white-space: nowrap;
+  }
+
+  .nav-hamburger {
+    justify-self: end;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-right {
+    grid-column: 1 / -1;
+    width: 100%;
+    align-items: stretch;
+    padding-top: 8px;
+  }
+
+  .navbar-right.open {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .nav-user-block {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-link,
+  .nav-btn,
+  .nav-menu-trigger {
+    width: 100%;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 12px;
+  }
+
+  .nav-btn.nav-pill,
+  .nav-btn-primary,
+  .nav-btn-outline {
+    justify-content: center;
+  }
+
+  .nav-menu-wrapper,
+  .nav-menu {
+    width: 100%;
+  }
+
+  .nav-menu {
+    position: static;
+    margin-top: 8px;
+    box-shadow: none;
+  }
+
+  .page-wrapper {
+    width: 100%;
+    padding: 16px 14px 34px;
+  }
+
+  .static-hero,
+  .pricing-hero,
+  .account-hero,
+  .contact-hero,
+  .videos-header,
+  .subscription-banner,
+  .cta-subscription-inner,
+  .site-footer,
+  .pwa-bottom-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .contact-hero,
+  .account-hero.enhanced,
+  .pricing-hero,
+  .static-hero,
+  .coming-soon-card,
+  .contact-card,
+  .account-card,
+  .video-player-wrapper,
+  .live-feature-card,
+  .live-feature-empty,
+  .pricing-card-inner {
+    border-radius: 14px;
+  }
+
+  .contact-layout,
+  .account-grid,
+  .pricing-grid,
+  .videos-grid,
+  .static-grid,
+  .static-grid.three-cols,
+  .live-feature-card,
+  .video-layout,
+  .pwa-bottom-inner,
+  .footer-links {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-grid,
+  .form-two-cols {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-actions,
+  .cta-subscription-actions,
+  .hero-cinema-actions,
+  .coming-soon-card .cta-row,
+  .pwa-bottom-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn,
+  .btn-store,
+  .contact-actions .btn,
+  .cta-subscription-actions .btn,
+  .hero-cinema-actions .btn,
+  .coming-soon-card .btn,
+  .payment-submit {
+    width: 100%;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .auth-container,
+  .auth-container--wide {
+    max-width: none;
+    padding: 22px 14px 34px;
+  }
+
+  .auth-card,
+  .auth-card--register {
+    max-width: none;
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  .auth-card__header {
+    align-items: flex-start;
+  }
+
+  .form-step,
+  .form label,
+  .account-card label,
+  .contact-grid label {
+    min-width: 0;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 16px;
+  }
+
+  .upload-block,
+  .upload-block--round {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .avatar-preview-round {
+    width: 112px;
+    height: 112px;
+  }
+
+  .cropper-modal {
+    align-items: flex-end;
+    padding: 10px;
+  }
+
+  .cropper-modal__content {
+    width: 100%;
+    max-height: 92vh;
+    overflow: auto;
+  }
+
+  .videos-header .btn,
+  .videos-header a {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .live-feature-media {
+    min-height: 180px;
+  }
+
+  .live-feature-info,
+  .live-feature-empty {
+    padding: 18px;
+  }
+
+  .video-player-wrapper {
+    padding: 10px;
+    margin-bottom: 18px;
+  }
+
+  .video-player-meta h1 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .page-with-scores {
+    display: block;
+    min-height: auto;
+  }
+
+  .video-main {
+    padding-left: 0;
+  }
+
+  .scores-sidebar {
+    display: none;
+  }
+
+  .ad-card {
+    margin-top: 16px;
+  }
+
+  .extraits-hero {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .extrait-modal-inner {
+    width: min(100%, 94vw);
+    max-height: 90vh;
+    overflow: auto;
+  }
+
+  .extrait-modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .site-footer {
+    padding: 22px 14px 34px;
+  }
+
+  .footer-left {
+    max-width: none;
+  }
+
+  .footer-links {
+    width: 100%;
+  }
+
+  .back-to-top {
+    right: 14px;
+    left: auto;
+    bottom: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  h1,
+  .hero-cinema-main h1,
+  .pricing-hero h1,
+  .static-hero h1 {
+    font-size: 28px;
+    line-height: 1.12;
+  }
+
+  h2 {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  .hero-cinema {
+    min-height: auto;
+    border-radius: 0;
+    margin: 0 -14px;
+  }
+
+  .hero-cinema-inner {
+    min-height: 620px;
+    padding: 16px 14px;
+  }
+
+  .hero-cinema-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-cinema-side {
+    text-align: left;
+  }
+
+  .hero-cinema-badge {
+    align-items: flex-start;
+    border-radius: 14px;
+  }
+
+  .hero-carousel {
+    grid-auto-columns: minmax(180px, 74vw);
+    gap: 10px;
+  }
+
+  .hero-carousel-thumb {
+    padding-top: 120%;
+  }
+
+  .pricing-grid {
+    gap: 14px;
+  }
+
+  .pricing-card-inner {
+    padding: 16px;
+  }
+
+  .payment-submit {
+    grid-column: auto;
+  }
+
+  .videos-grid {
+    gap: 14px;
+  }
+
+  .video-card,
+  .contact-card,
+  .account-card,
+  .auth-card {
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .contact-badge,
+  .account-status {
+    width: 100%;
+  }
+
+  .goal-title {
+    font-size: 34px;
+    letter-spacing: 0.06em;
+  }
+
+  .page-auth::before {
+    background-size: 260px;
+  }
 }

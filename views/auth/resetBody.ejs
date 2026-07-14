@@ -4,6 +4,7 @@
     <p class="auth-subtitle">Choisis un nouveau mot de passe.</p>
 
     <form method="POST" action="/reset-password" class="form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <input type="hidden" name="token" value="<%= token %>">
       <label>Nouveau mot de passe
         <input type="password" name="password" required minlength="6">

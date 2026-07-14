@@ -4,13 +4,20 @@ const apiKey = process.env.YOUTUBE_API_KEY;
 const channelId = process.env.YOUTUBE_CHANNEL_ID;
 const channelUrl = process.env.YOUTUBE_CHANNEL_URL || (channelId ? `https://www.youtube.com/channel/${channelId}` : '');
 const defaultMaxResults = Number(process.env.YOUTUBE_MAX_RESULTS || 100);
+const configured = Boolean(apiKey && channelId);
+
+function getMissingConfig() {
+  const missing = [];
+  if (!apiKey) missing.push('YOUTUBE_API_KEY');
+  if (!channelId) missing.push('YOUTUBE_CHANNEL_ID');
+  return missing;
+}
 
 function requestYouTube(path, params = {}) {
-  if (!apiKey || !channelId) {
-    const missing = [];
-    if (!apiKey) missing.push('YOUTUBE_API_KEY');
-    if (!channelId) missing.push('YOUTUBE_CHANNEL_ID');
-    return Promise.reject(new Error(`${missing.join(' / ')} manquant(s).`));
+  if (!configured) {
+    const error = new Error(`${getMissingConfig().join(' / ')} manquant(s).`);
+    error.code = 'YOUTUBE_CONFIG_MISSING';
+    return Promise.reject(error);
   }
 
   const url = new URL(`https://www.googleapis.com/youtube/v3/${path}`);
@@ -90,6 +97,8 @@ function mapVideoItem(item) {
 }
 
 async function listChannelVideos(limit = defaultMaxResults) {
+  if (!configured) return [];
+
   const target = Math.max(1, Math.min(limit, 500));
   const videos = [];
   let pageToken = '';
@@ -113,6 +122,8 @@ async function listChannelVideos(limit = defaultMaxResults) {
 }
 
 async function getLiveVideo() {
+  if (!configured) return null;
+
   const body = await requestYouTube('search', {
     part: 'snippet',
     channelId,
@@ -126,6 +137,8 @@ async function getLiveVideo() {
 }
 
 async function getVideoById(videoId) {
+  if (!configured) return null;
+
   const body = await requestYouTube('videos', {
     part: 'snippet,liveStreamingDetails',
     id: videoId,
@@ -138,6 +151,8 @@ async function getVideoById(videoId) {
 
 module.exports = {
   channelUrl,
+  configured,
+  getMissingConfig,
   getLiveVideo,
   getVideoById,
   listChannelVideos

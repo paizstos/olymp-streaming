@@ -20,6 +20,7 @@ if (fs.existsSync(envPath)) {
 const express = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
+const crypto = require('crypto');
 
 const { sequelize, Subscription, User } = require('./models');
 const { DataTypes, Op } = require('sequelize');
@@ -38,6 +39,14 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 const ADMIN_GOAL_TOKEN = process.env.ADMIN_GOAL_TOKEN || null;
 
 const app = express();
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
 // Nécessaire derrière un proxy (Railway/HTTPS) pour que les cookies de session "secure" soient bien posés
 app.set('trust proxy', 1);
 
@@ -69,6 +78,23 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req, res, next) => {
+  if (!req.session.csrfToken) {
+    req.session.csrfToken = crypto.randomBytes(32).toString('hex');
+  }
+  res.locals.csrfToken = req.session.csrfToken;
+
+  if (req.method === 'POST' && !req.path.startsWith('/admin/')) {
+    const submittedToken = req.body?._csrf;
+    if (!submittedToken || submittedToken !== req.session.csrfToken) {
+      req.flash('error', 'Session expirée, merci de réessayer.');
+      return res.redirect(req.get('referer') || '/');
+    }
+  }
+
+  next();
+});
+
 // Middleware pour rendre user et messages accessibles dans les vues
 app.use(async (req, res, next) => {
   res.locals.currentUser = null;
@@ -76,6 +102,8 @@ app.use(async (req, res, next) => {
   res.locals.error = req.flash('error');
   res.locals.subscriptionActive = false;
   res.locals.subscriptionBadge = null;
+  res.locals.cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME || '';
+  res.locals.cloudinaryUploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET || '';
 
   if (req.session?.user) {
     try {
@@ -106,7 +134,7 @@ app.use(async (req, res, next) => {
           active.type === 'daily'
             ? 'Premium · Jour'
             : active.type === 'quarter'
-            ? 'Premium · Pass CAN'
+            ? 'Premium · Pass 3 mois'
             : 'Premium';
         res.locals.subscriptionBadge = {
           label,
@@ -180,10 +208,13 @@ const requireAuth = (req, res, next) => {
     '/verify',
     '/verify/pending'
   ];
-  if (publicPaths.includes(req.path) || publicPaths.some(p => p !== '/' && req.path.startsWith(p))) {
+  const isPublicPath = publicPaths.some(p => req.path === p || (p !== '/' && req.path.startsWith(`${p}/`)));
+  if (isPublicPath) {
     return next();
   }
   if (req.session.user) return next();
+  if (req.method === 'GET') req.session.returnTo = req.originalUrl;
+  req.flash('error', 'Veuillez vous connecter pour continuer.');
   return res.redirect('/login');
 };
 
@@ -229,6 +260,10 @@ async function patchUserSchema() {
 
 // Crée/force deux comptes premium de test (local + prod) pour faciliter la QA
 async function ensureTestUsers() {
+  if (IS_PROD && process.env.ENABLE_TEST_USERS !== '1') {
+    return;
+  }
+
   const testUsers = [
     { email: 'adammalila11@gmail.com', firstName: 'Adam', lastName: 'Malila', country: 'BE' },
     { email: 'paizstos11012001@gmail.com', firstName: 'Paizstos', lastName: 'Olymp', country: 'BE' }

@@ -10,6 +10,7 @@
 </section>
 
 <form method="POST" action="/payment/subscribe" class="pricing-grid">
+  <input type="hidden" name="_csrf" value="${csrfToken}">
   <label class="pricing-card">
     <input type="radio" name="plan" value="daily" checked>
     <div class="pricing-card-inner">

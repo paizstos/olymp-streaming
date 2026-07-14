@@ -11,6 +11,7 @@
     </div>
 
     <form method="POST" action="/register" class="form form-progressive" id="registerForm">
+      <input type="hidden" name="_csrf" value="${csrfToken}">
       <div class="form-step" data-step="0">
         <label>Prénom
           <input type="text" name="firstName" autocomplete="given-name" required>

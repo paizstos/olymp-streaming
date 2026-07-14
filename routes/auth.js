@@ -18,12 +18,34 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function startUserSession(req, user) {
+  const returnTo = req.session.returnTo;
+
+  return new Promise((resolve, reject) => {
+    req.session.regenerate((err) => {
+      if (err) return reject(err);
+      req.session.csrfToken = crypto.randomBytes(32).toString('hex');
+      req.session.user = {
+        id: user.id,
+        email: user.email,
+        fullName: user.fullName,
+        avatarUrl: user.avatarUrl || null
+      };
+      resolve(returnTo && returnTo.startsWith('/') ? returnTo : null);
+    });
+  });
+}
+
 // GET /login
 router.get('/dash' ,(req, res) => {
     if (!req.session.user){
-        res.redirect('/')
+        return res.redirect('/')
     } else {
-        res.redirect('/videos')
+        return res.redirect('/videos')
     }
 });
 
@@ -39,36 +61,41 @@ router.get('/login', (req, res) => {
 // POST /login
 router.post('/login', async (req, res) => {
   try {
-    const { email, password, newsletter, acceptTerms } = req.body;
+    const email = normalizeEmail(req.body.email);
+    const { password } = req.body;
+    const loginWindowMs = 10 * 60 * 1000;
+    const nowMs = Date.now();
+    const failures = req.session.loginFailures || { count: 0, firstAt: nowMs };
+    if (nowMs - failures.firstAt > loginWindowMs) {
+      failures.count = 0;
+      failures.firstAt = nowMs;
+    }
+    if (failures.count >= 6) {
+      req.flash('error', 'Trop de tentatives. Réessaie dans quelques minutes.');
+      return res.redirect('/login');
+    }
+    if (!email || !password) {
+      req.session.loginFailures = { count: failures.count + 1, firstAt: failures.firstAt };
+      req.flash('error', 'Email ou mot de passe incorrect');
+      return res.redirect('/login');
+    }
 
     const user = await User.findOne({ where: { email } });
     if (!user) {
+      req.session.loginFailures = { count: failures.count + 1, firstAt: failures.firstAt };
       req.flash('error', 'Email ou mot de passe incorrect');
       return res.redirect('/login');
     }
 
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {
+      req.session.loginFailures = { count: failures.count + 1, firstAt: failures.firstAt };
       req.flash('error', 'Email ou mot de passe incorrect');
       return res.redirect('/login');
     }
 
-    req.session.user = { id: user.id, email: user.email, fullName: user.fullName };
+    const returnTo = await startUserSession(req, user);
     req.flash('success', 'Connexion réussie');
-
-    // Enregistre l’opt-in newsletter si demandé
-    if (newsletter === '1') {
-      try {
-        await NewsletterSignup.create({
-          email: user.email,
-          country: null,
-          acceptTerms: acceptTerms === '1',
-          source: 'login'
-        });
-      } catch (err) {
-        console.error('Newsletter signup error:', err);
-      }
-    }
 
     const now = new Date();
     const active = await require('../models').Subscription.findOne({
@@ -80,7 +107,7 @@ router.post('/login', async (req, res) => {
     });
 
     if (active) {
-      return res.redirect('/videos');
+      return res.redirect(returnTo || '/videos');
     }
 
     return res.redirect('/payment/choose');
@@ -99,7 +126,6 @@ router.get('/register', (req, res) => {
 // POST /register
 router.post('/register', async (req, res) => {
   const {
-    email,
     password,
     passwordConfirm,
     firstName,
@@ -109,6 +135,7 @@ router.post('/register', async (req, res) => {
     newsletter,
     acceptTerms
   } = req.body;
+  const email = normalizeEmail(req.body.email);
 
   try {
     if (acceptTerms !== '1') {
@@ -118,6 +145,11 @@ router.post('/register', async (req, res) => {
 
     if (!firstName || !lastName || !birthDate || !country) {
       req.flash('error', 'Merci de compléter tous les champs.');
+      return res.redirect('/register');
+    }
+
+    if (!email || !password || password.length < 6) {
+      req.flash('error', 'Merci de saisir un email valide et un mot de passe de 6 caractères minimum.');
       return res.redirect('/register');
     }
 
@@ -241,7 +273,7 @@ router.post('/register', async (req, res) => {
     }).catch(err => console.error('Send welcome email error:', err));
 
     // Plus de confirmation : on connecte et on envoie vers paiement
-    req.session.user = { id: user.id, email: user.email, fullName: user.fullName };
+    await startUserSession(req, user);
     res.redirect('/payment/choose');
   } catch (err) {
     console.error(err);
@@ -296,11 +328,18 @@ router.get('/forgot-password', (req, res) => {
 });
 
 router.post('/forgot-password', async (req, res) => {
-  const { email } = req.body;
+  const email = normalizeEmail(req.body.email);
   if (!email) {
     req.flash('error', 'Email requis');
     return res.redirect('/forgot-password');
   }
+
+  const nowMs = Date.now();
+  if (req.session.lastPasswordResetRequestAt && nowMs - req.session.lastPasswordResetRequestAt < 2 * 60 * 1000) {
+    req.flash('success', 'Si un compte existe, un email a été envoyé.');
+    return res.redirect('/forgot-password');
+  }
+  req.session.lastPasswordResetRequestAt = nowMs;
 
   const user = await User.findOne({ where: { email } });
   if (!user) {
@@ -316,7 +355,8 @@ router.post('/forgot-password', async (req, res) => {
   user.resetTokenExpires = expires;
   await user.save();
 
-  const resetUrl = `${req.protocol}://${req.get('host')}/reset-password?token=${token}`;
+  const appUrl = process.env.PUBLIC_APP_URL || `${req.protocol}://${req.get('host')}`;
+  const resetUrl = `${appUrl}/reset-password?token=${token}`;
 
   sendMail({
     to: user.email,
@@ -347,15 +387,15 @@ router.get('/auth/google/callback', (req, res, next) => {
     req.flash('error', 'Connexion Google indisponible (configuration manquante)');
     return res.redirect('/login');
   }
-  return passport.authenticate('google', { failureRedirect: '/login', session: true }, () => {
-    if (req.user) {
-      req.session.user = {
-        id: req.user.id,
-        email: req.user.email,
-        fullName: req.user.fullName
-      };
+  return passport.authenticate('google', { failureRedirect: '/login', session: true }, async () => {
+    try {
+      if (req.user) {
+        await startUserSession(req, req.user);
+      }
+      res.redirect('/');
+    } catch (err) {
+      next(err);
     }
-    res.redirect('/');
   })(req, res, next);
 });
 
@@ -419,6 +459,10 @@ router.post('/reset-password', async (req, res) => {
   if (!token || !password || !passwordConfirm) {
     req.flash('error', 'Données manquantes');
     return res.redirect('/login');
+  }
+  if (password.length < 6) {
+    req.flash('error', 'Le mot de passe doit contenir au moins 6 caractères.');
+    return res.redirect(`/reset-password?token=${encodeURIComponent(token)}`);
   }
   if (password !== passwordConfirm) {
     req.flash('error', 'Les mots de passe ne correspondent pas.');
