@@ -102,7 +102,7 @@
                 title: "Débrief Léopards – RDC vs Ethiopie",
                 description: "Analyse à chaud avec notre influenceur star.",
                 videoUrl: "/videos/test3.mp4",
-                thumbnailUrl: "https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg",
+                thumbnailUrl: "",
                 tag: "Débrief",
                 matchInfo: "RDC 2 – 1 Maroc"
               },
@@ -111,7 +111,7 @@
                 title: "La CAN 2025 avec Arthur MASUAKU !",
                 description: "Ce que les caméras classiques ne te montrent pas.",
                 videoUrl: "/videos/video_masuaku2.mp4",
-                thumbnailUrl: "https://images.pexels.com/photos/399187/pexels-photo-399187.jpeg",
+                thumbnailUrl: "",
                 tag: "Coulisses",
                 matchInfo: "Inside Léopards"
               },
@@ -120,7 +120,7 @@
                 title: "Parole aux fans – Kinshasa",
                 description: "Micro-trottoir à chaud après le match.",
                 videoUrl: "/videos/test4.mp4",
-                thumbnailUrl: "https://images.pexels.com/photos/799091/pexels-photo-799091.jpeg",
+                thumbnailUrl: "",
                 tag: "Fans",
                 matchInfo: "Ambiance 243"
               },
@@ -129,7 +129,7 @@
                 title: "Tactique vue du salon",
                 description: "Décryptage posé, comme si tu étais avec lui.",
                 videoUrl: "/videos/test2.mp4",
-                thumbnailUrl: "https://images.pexels.com/photos/848613/pexels-photo-848613.jpeg",
+                thumbnailUrl: "",
                 tag: "Analyse",
                 matchInfo: "Board tactique"
               }
@@ -144,9 +144,20 @@
                 data-tag="<%= v.tag %>"
                 data-match-info="<%= v.matchInfo %>"
                 data-video-id="<%= v.id %>"
+                data-thumbnail-url="<%= v.thumbnailUrl || '' %>"
               >
                 <div class="hero-carousel-thumb"
-                     style="background-image:url('<%= v.thumbnailUrl %>')">
+                     style="<%= !v.videoUrl && v.thumbnailUrl ? `background-image:url('${v.thumbnailUrl}')` : '' %>">
+                  <% if (v.videoUrl) { %>
+                    <video
+                      class="hero-carousel-inline-video"
+                      muted
+                      loop
+                      playsinline
+                      preload="metadata"
+                      src="<%= v.videoUrl %>"
+                    ></video>
+                  <% } %>
                   <div class="hero-carousel-thumb-overlay"></div>
                   <button type="button" class="hero-carousel-play">▶</button>
                 </div>
@@ -405,10 +416,28 @@
 .hero-carousel-thumb {
   position: relative;
   padding-top: 145%;
+  background-color: #041827;
+  background-image:
+    linear-gradient(135deg, rgba(1, 181, 116, 0.16), rgba(8, 19, 36, 0.45)),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04));
   background-size: cover;
   background-position: center;
   border-radius: 12px;
   overflow: hidden;
+}
+
+.hero-carousel-inline-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.18s ease-out;
+}
+
+.hero-carousel-item.inline-video-ready .hero-carousel-inline-video {
+  opacity: 1;
 }
 
 .hero-carousel-thumb-overlay {

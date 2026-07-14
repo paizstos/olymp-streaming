@@ -1,4 +1,4 @@
-const CACHE_NAME = 'olymp-pwa-v10';
+const CACHE_NAME = 'olymp-pwa-v13';
 const CORE_ASSETS = [
   '/css/style.css',
   '/js/homeLanding.js',

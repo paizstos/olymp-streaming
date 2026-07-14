@@ -1595,8 +1595,26 @@ textarea:focus-visible {
   padding-top: 56.25%;
   border-radius: var(--radius-sm);
   overflow: hidden;
+  background-color: #041827;
+  background-image:
+    linear-gradient(135deg, rgba(1, 181, 116, 0.16), rgba(8, 19, 36, 0.45)),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04));
   background-size: cover;
   background-position: center;
+}
+
+.hero-carousel-inline-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.hero-carousel-item.inline-video-ready .hero-carousel-inline-video {
+  opacity: 1;
 }
 
 .hero-carousel-thumb-overlay {
