@@ -11,6 +11,18 @@ router.get('/contact', (req, res) => {
   res.render('pages/contact');
 });
 
+router.get('/terms', (req, res) => {
+  res.render('pages/terms');
+});
+
+router.get('/privacy', (req, res) => {
+  res.render('pages/privacy');
+});
+
+router.get('/cookies', (req, res) => {
+  res.render('pages/cookies');
+});
+
 router.get('/music', ensureActiveSubscription, (req, res) => {
   res.render('pages/music', { comingSoon: true });
 });

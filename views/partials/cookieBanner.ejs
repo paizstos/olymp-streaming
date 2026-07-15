@@ -1,0 +1,56 @@
+<div class="cookie-banner" id="cookieBanner" hidden>
+  <div class="cookie-banner__content">
+    <p class="cookie-banner__title">Respect de ta vie privée</p>
+    <p class="cookie-banner__text">
+      OLYMP utilise les cookies nécessaires au fonctionnement du site. Les cookies d’audience ou marketing restent désactivés sans ton accord.
+      <a href="/cookies">En savoir plus</a>
+    </p>
+  </div>
+  <div class="cookie-banner__actions">
+    <button class="btn btn-ghost btn-small" type="button" data-cookie-reject>Refuser</button>
+    <button class="btn btn-ghost btn-small" type="button" data-cookie-customize>Paramétrer</button>
+    <button class="btn btn-primary btn-small" type="button" data-cookie-accept>Accepter</button>
+  </div>
+</div>
+
+<div class="cookie-modal" id="cookieModal" hidden aria-hidden="true">
+  <div class="cookie-modal__panel" role="dialog" aria-modal="true" aria-labelledby="cookieModalTitle">
+    <div class="cookie-modal__header">
+      <div>
+        <p class="kicker">Confidentialité</p>
+        <h2 id="cookieModalTitle">Préférences cookies</h2>
+      </div>
+      <button class="icon-button" type="button" data-cookie-close aria-label="Fermer">×</button>
+    </div>
+
+    <div class="cookie-choice">
+      <div>
+        <strong>Nécessaires</strong>
+        <p>Session, sécurité, CSRF, préférences essentielles.</p>
+      </div>
+      <span class="cookie-required">Toujours actifs</span>
+    </div>
+
+    <label class="cookie-choice">
+      <div>
+        <strong>Audience</strong>
+        <p>Mesure de fréquentation si un outil analytique est ajouté.</p>
+      </div>
+      <input type="checkbox" id="cookieAnalytics">
+    </label>
+
+    <label class="cookie-choice">
+      <div>
+        <strong>Marketing</strong>
+        <p>Personnalisation ou publicité, désactivée par défaut.</p>
+      </div>
+      <input type="checkbox" id="cookieMarketing">
+    </label>
+
+    <div class="cookie-modal__actions">
+      <button class="btn btn-ghost" type="button" data-cookie-reject>Tout refuser</button>
+      <button class="btn btn-primary" type="button" data-cookie-save>Enregistrer</button>
+    </div>
+  </div>
+</div>
+<script src="/js/cookie-consent.js" defer></script>

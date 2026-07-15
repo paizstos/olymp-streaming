@@ -1,0 +1,28 @@
+<%- include('../layout', {
+  pageClass: 'page-static legal-page',
+  metaTitle: 'Politique cookies - OLYMP',
+  metaDescription: 'Gestion des cookies et préférences de consentement OLYMP.',
+  body: `
+<section class="static-hero legal-hero">
+  <p class="kicker">Préférences</p>
+  <h1>Politique cookies</h1>
+  <p class="lead">Dernière mise à jour : 15 juillet 2026.</p>
+</section>
+
+<section class="legal-layout">
+  <article class="legal-card">
+    <h2>1. Cookies nécessaires</h2>
+    <p>OLYMP utilise des cookies ou stockages strictement nécessaires pour maintenir la session, protéger les formulaires contre les attaques CSRF, mémoriser les messages temporaires et assurer le fonctionnement du site. Ils ne peuvent pas être désactivés depuis la bannière.</p>
+
+    <h2>2. Mesure d’audience</h2>
+    <p>Aucun outil d’audience non essentiel n’est activé par défaut dans cette version. Si un outil analytique est ajouté, il devra respecter votre choix et ne se lancer qu’après consentement, sauf exemption légale strictement applicable.</p>
+
+    <h2>3. Marketing</h2>
+    <p>Aucun cookie publicitaire n’est activé par défaut. Les cookies marketing devront rester désactivés tant que vous ne les acceptez pas explicitement.</p>
+
+    <h2>4. Modifier votre choix</h2>
+    <p>Vous pouvez rouvrir la fenêtre de préférences à tout moment depuis le footer du site.</p>
+    <button class="btn btn-primary" type="button" data-cookie-settings>Gérer mes préférences cookies</button>
+  </article>
+</section>
+` }) %>

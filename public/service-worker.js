@@ -1,6 +1,7 @@
-const CACHE_NAME = 'olymp-pwa-v14';
+const CACHE_NAME = 'olymp-pwa-v15';
 const CORE_ASSETS = [
   '/css/style.css',
+  '/js/cookie-consent.js',
   '/js/homeLanding.js',
   '/js/goalOverlay.js',
   '/js/pwa-register.js',
