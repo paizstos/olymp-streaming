@@ -37,6 +37,7 @@ const { passport } = require('./services/passport');
 const SESSION_SECRET = process.env.SESSION_SECRET || 'dev-olymp-secret';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const ADMIN_GOAL_TOKEN = process.env.ADMIN_GOAL_TOKEN || null;
+const TERMS_VERSION = '2026-07-15';
 
 const app = express();
 app.disable('x-powered-by');
@@ -45,6 +46,24 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader(
+    'Content-Security-Policy',
+    [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'self'",
+      "img-src 'self' data: https:",
+      "media-src 'self' https:",
+      "script-src 'self' 'unsafe-inline' https://unpkg.com",
+      "style-src 'self' 'unsafe-inline' https://unpkg.com",
+      "connect-src 'self' https://api.cloudinary.com https://res.cloudinary.com",
+      "frame-src 'self' https://www.youtube-nocookie.com"
+    ].join('; ')
+  );
+  if (IS_PROD) {
+    res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+  }
   next();
 });
 // Nécessaire derrière un proxy (Railway/HTTPS) pour que les cookies de session "secure" soient bien posés
@@ -78,6 +97,37 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+function createRateLimiter({ windowMs, max, message }) {
+  const hits = new Map();
+  return (req, res, next) => {
+    if (req.method !== 'POST') return next();
+    const now = Date.now();
+    const key = `${req.ip}:${req.path}`;
+    const entry = hits.get(key) || { count: 0, firstAt: now };
+    if (now - entry.firstAt > windowMs) {
+      entry.count = 0;
+      entry.firstAt = now;
+    }
+    entry.count += 1;
+    hits.set(key, entry);
+    if (entry.count <= max) return next();
+
+    if (req.accepts('html')) {
+      req.flash('error', message);
+      return res.redirect(req.get('referer') || '/');
+    }
+    return res.status(429).json({ error: message });
+  };
+}
+
+const sensitiveFormLimiter = createRateLimiter({
+  windowMs: 10 * 60 * 1000,
+  max: 20,
+  message: 'Trop de tentatives. Merci de reessayer dans quelques minutes.'
+});
+
+app.use(['/login', '/register', '/forgot-password', '/reset-password', '/contact'], sensitiveFormLimiter);
+
 app.use((req, res, next) => {
   if (!req.session.csrfToken) {
     req.session.csrfToken = crypto.randomBytes(32).toString('hex');
@@ -104,6 +154,7 @@ app.use(async (req, res, next) => {
   res.locals.subscriptionBadge = null;
   res.locals.cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME || '';
   res.locals.cloudinaryUploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET || '';
+  res.locals.termsVersion = TERMS_VERSION;
 
   if (req.session?.user) {
     try {
@@ -206,6 +257,7 @@ const requireAuth = (req, res, next) => {
     '/terms',
     '/privacy',
     '/cookies',
+    '/newsletter/unsubscribe',
     '/forgot-password',
     '/reset-password',
     '/verify',
@@ -248,7 +300,10 @@ async function patchUserSchema() {
       verifyToken: { type: DataTypes.STRING, allowNull: true },
       verifyTokenExpires: { type: DataTypes.DATE, allowNull: true },
       resetToken: { type: DataTypes.STRING, allowNull: true },
-      resetTokenExpires: { type: DataTypes.DATE, allowNull: true }
+      resetTokenExpires: { type: DataTypes.DATE, allowNull: true },
+      termsVersion: { type: DataTypes.STRING, allowNull: true },
+      termsAcceptedAt: { type: DataTypes.DATE, allowNull: true },
+      marketingConsentAt: { type: DataTypes.DATE, allowNull: true }
     };
     for (const [column, definition] of Object.entries(candidates)) {
       if (!table[column]) {

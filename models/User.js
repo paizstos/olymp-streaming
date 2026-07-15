@@ -46,6 +46,15 @@ const User = sequelize.define('User', {
   },
   resetTokenExpires: {
     type: DataTypes.DATE, allowNull: true
+  },
+  termsVersion: {
+    type: DataTypes.STRING, allowNull: true
+  },
+  termsAcceptedAt: {
+    type: DataTypes.DATE, allowNull: true
+  },
+  marketingConsentAt: {
+    type: DataTypes.DATE, allowNull: true
   }
 });
 

@@ -1,0 +1,21 @@
+<%- include('../layout', {
+  pageClass: 'page-static legal-page',
+  metaTitle: 'Desinscription newsletter - OLYMP',
+  metaDescription: 'Retirer une adresse email de la newsletter OLYMP.',
+  body: `
+<section class="static-hero legal-hero">
+  <p class="kicker">Newsletter</p>
+  <h1>Desinscription</h1>
+  <p class="lead">Tu peux retirer ton adresse de la newsletter OLYMP a tout moment.</p>
+</section>
+
+<section class="legal-layout">
+  <form class="legal-card" method="POST" action="/newsletter/unsubscribe">
+    <input type="hidden" name="_csrf" value="${csrfToken}">
+    <label>Email
+      <input type="email" name="email" required value="${typeof email !== 'undefined' ? email : ''}">
+    </label>
+    <button class="btn btn-primary" type="submit">Me desinscrire</button>
+  </form>
+</section>
+` }) %>

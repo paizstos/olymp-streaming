@@ -26,7 +26,7 @@ router.post('/subscribe', ensureAuth, async (req, res) => {
 
   if (existingActive) {
     req.flash('success', 'Ton abonnement est déjà actif.');
-    return res.redirect('/videos');
+    return res.redirect('/videos/');
   }
 
   let end = new Date(now);
@@ -64,7 +64,7 @@ router.post('/subscribe', ensureAuth, async (req, res) => {
 
   // Ici tu intégrerais plus tard IllicoCash / Rawbank
   req.flash('success', 'Abonnement activé (simulation de paiement réussie)');
-  res.redirect('/videos');
+  res.redirect('/videos/');
 });
 
 module.exports = router;

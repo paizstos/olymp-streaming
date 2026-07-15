@@ -34,6 +34,18 @@
         </div>
       <% } %>
 
+      <div class="video-tools" data-video-tools>
+        <label class="video-search">
+          <span>Rechercher</span>
+          <input type="search" id="videoSearchInput" placeholder="Titre, description..." autocomplete="off">
+        </label>
+        <div class="video-filter-pills" aria-label="Filtres videos">
+          <button class="video-filter-pill active" type="button" data-video-filter="all">Toutes</button>
+          <button class="video-filter-pill" type="button" data-video-filter="live">Lives</button>
+          <button class="video-filter-pill" type="button" data-video-filter="replay">Replays</button>
+        </div>
+      </div>
+
       <section class="live-feature">
         <% if (typeof liveVideo !== 'undefined' && liveVideo) { %>
           <a href="/videos/<%= liveVideo.id %>" class="live-feature-card">
@@ -62,7 +74,7 @@
         <% } %>
 
         <% videos.forEach(video => { %>
-          <a href="/videos/<%= video.id %>" class="video-card">
+          <a href="/videos/<%= video.id %>" class="video-card" data-video-card data-title="<%= video.title || '' %>" data-description="<%= video.description || '' %>" data-kind="<%= video.isLive ? 'live' : 'replay' %>">
             <div class="video-thumb" style="background-image:url('<%= video?.thumbnailUrl %>')">
               <% if (video.isLive) { %>
                 <span class="live-badge">EN DIRECT</span>
@@ -78,8 +90,10 @@
           </a>
         <% }) %>
       </div>
+      <p class="video-empty-state" id="videoEmptyState" hidden>Aucune video ne correspond a ta recherche.</p>
     </section>
   </main>
+  <script src="/js/videoPage.js"></script>
   <%- include('../partials/footer') %>
 </body>
 </html>

@@ -1,39 +1,56 @@
 <section class="account-hero enhanced">
   <div>
-    <p class="kicker">Mon compte</p>
-    <h1>Profil et accès</h1>
-    <p class="lead">Mets à jour tes infos, avatar, et vérifie tes accès.</p>
+    <p class="kicker">Mon espace</p>
+    <h1>Compte, abonnement et confidentialite</h1>
+    <p class="lead">Gere ton profil, ta securite, tes donnees et tes acces OLYMP depuis un seul endroit.</p>
   </div>
   <div class="account-status status-pill">
-    <span class="status-dot"></span> Connecté
+    <span class="status-dot"></span> Connecte
   </div>
 </section>
 
-<!-- CropperJS (CDN) -->
 <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
 
-<section class="account-grid enhanced">
+<section class="account-tabs" aria-label="Sections du compte">
+  <button class="account-tab active" type="button" data-account-tab="profil">Profil</button>
+  <button class="account-tab" type="button" data-account-tab="abonnement">Abonnement</button>
+  <button class="account-tab" type="button" data-account-tab="securite">Securite</button>
+  <button class="account-tab" type="button" data-account-tab="confidentialite">Confidentialite</button>
+</section>
+
+<section class="account-grid enhanced account-panel active" id="profil" data-account-panel="profil">
   <form class="account-card account-card--wide" method="POST" action="/account">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="section-heading-inline">
+      <div>
+        <p class="kicker">Profil</p>
+        <h2>Informations personnelles</h2>
+      </div>
+      <span class="mini-badge">Modifiable</span>
+    </div>
+
     <div class="form-two-cols">
-      <label>Prénom
-        <input type="text" name="firstName" value="<%= user.firstName || '' %>">
+      <label>Prenom
+        <input type="text" name="firstName" value="<%= user.firstName || '' %>" autocomplete="given-name" maxlength="80">
       </label>
       <label>Nom
-        <input type="text" name="lastName" value="<%= user.lastName || '' %>">
+        <input type="text" name="lastName" value="<%= user.lastName || '' %>" autocomplete="family-name" maxlength="80">
       </label>
     </div>
-    <label>Email (lecture seule)
+
+    <label>Email
       <input type="email" value="<%= user.email %>" disabled>
     </label>
+
     <div class="form-two-cols">
       <label>Pays
-        <input type="text" name="country" value="<%= user.country || '' %>">
+        <input type="text" name="country" value="<%= user.country || '' %>" autocomplete="country" maxlength="80">
       </label>
       <label>Date de naissance
         <input type="date" name="birthDate" value="<%= user.birthDate || '' %>">
       </label>
     </div>
+
     <input
       type="hidden"
       name="avatarUrl"
@@ -46,7 +63,7 @@
     <div class="upload-block upload-block--round">
       <div>
         <p class="upload-title">Photo de profil</p>
-        <p class="upload-text">Importe une image (jpg/png). Elle sera recadrée puis envoyée dans le cloud, pas stockée sur le serveur.</p>
+        <p class="upload-text">Image jpg/png, recadree avant envoi Cloudinary. Rien n'est stocke localement sur le serveur.</p>
         <label class="btn btn-outline btn-small pill">
           Importer une photo
           <input type="file" id="avatarFile" accept="image/*" hidden>
@@ -56,42 +73,174 @@
       <div class="avatar-preview-round" id="avatarPreview" style="background-image:url('<%= user.avatarUrl || '/images/logo_simple_192.png' %>')"></div>
     </div>
 
-    <button class="btn btn-primary btn-full" type="submit">Enregistrer</button>
+    <button class="btn btn-primary btn-full" type="submit">Enregistrer le profil</button>
   </form>
 
-  <div class="account-side enhanced">
+  <aside class="account-side enhanced">
     <div class="card">
-      <h3>Abonnement</h3>
-      <p>Gère ton offre et tes moyens de paiement.</p>
-      <% if (typeof subscription !== 'undefined' && subscription) { %>
-        <p class="mini-list">
-          Offre : <strong><%= subscription.type === 'daily' ? 'Premium · Jour' : subscription.type === 'quarter' ? 'Premium · Pass 3 mois' : 'Premium' %></strong><br>
-          Début : <%= subscription.startDate ? subscription.startDate.toISOString().slice(0,10) : '-' %><br>
-          Fin : <%= subscription.endDate ? subscription.endDate.toISOString().slice(0,10) : '-' %>
-        </p>
-      <% } else { %>
-        <p class="mini-list">Aucun abonnement actif.</p>
-      <% } %>
-      <a class="btn btn-ghost" href="/payment/choose">Accéder à mon abonnement</a>
-      <a class="btn btn-outline pill" href="/payment/choose" style="margin-top:8px;">Modifier mes moyens de paiement</a>
+      <h3>Qualite du compte</h3>
+      <p class="mini-list">
+        Email : <strong><%= user.emailVerified ? 'verifie' : 'non verifie' %></strong><br>
+        Connexion Google : <strong><%= user.googleId ? 'liee' : 'non liee' %></strong><br>
+        CGU : <strong><%= user.termsVersion || 'non renseigne' %></strong>
+      </p>
     </div>
     <div class="card">
       <h3>Support</h3>
-      <p>Pour tout problème de compte ou de paiement.</p>
-      <p class="mini-list">
-        <span>support@olympdm.com</span><br>
-        <span>team@olympdm.com</span>
-      </p>
+      <p>Pour tout probleme de compte, d'acces ou de paiement.</p>
+      <p class="mini-list">support@olympdm.com<br>team@olympdm.com</p>
     </div>
+  </aside>
+</section>
+
+<section class="account-panel" id="abonnement" data-account-panel="abonnement">
+  <div class="account-grid enhanced">
+    <div class="account-card account-card--wide">
+      <div class="section-heading-inline">
+        <div>
+          <p class="kicker">Abonnement</p>
+          <h2>Offre active</h2>
+        </div>
+        <% if (typeof subscription !== 'undefined' && subscription) { %>
+          <span class="mini-badge mini-badge--success">Actif</span>
+        <% } else { %>
+          <span class="mini-badge">Inactif</span>
+        <% } %>
+      </div>
+
+      <% if (typeof subscription !== 'undefined' && subscription) { %>
+        <div class="subscription-summary">
+          <div>
+            <span>Offre</span>
+            <strong><%= subscription.type === 'daily' ? 'Premium - Jour' : subscription.type === 'quarter' ? 'Premium - Pass 3 mois' : 'Premium' %></strong>
+          </div>
+          <div>
+            <span>Debut</span>
+            <strong><%= subscription.startDate ? subscription.startDate.toISOString().slice(0,10) : '-' %></strong>
+          </div>
+          <div>
+            <span>Fin</span>
+            <strong><%= subscription.endDate ? subscription.endDate.toISOString().slice(0,10) : '-' %></strong>
+          </div>
+        </div>
+      <% } else { %>
+        <p class="lead">Aucun abonnement actif. Choisis une offre pour acceder au streaming premium.</p>
+      <% } %>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/payment/choose">Gerer mon abonnement</a>
+        <a class="btn btn-ghost" href="/videos/">Acceder au streaming</a>
+      </div>
+    </div>
+
+    <aside class="account-side enhanced">
+      <div class="card">
+        <h3>Historique recent</h3>
+        <% if (typeof subscriptionHistory !== 'undefined' && subscriptionHistory && subscriptionHistory.length) { %>
+          <ul class="account-history">
+            <% subscriptionHistory.forEach(item => { %>
+              <li>
+                <span><%= item.type === 'daily' ? 'Jour' : item.type === 'quarter' ? 'Pass 3 mois' : item.type %></span>
+                <strong><%= item.status %></strong>
+                <small><%= item.endDate ? item.endDate.toISOString().slice(0,10) : '-' %></small>
+              </li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p class="mini-list">Aucun historique disponible.</p>
+        <% } %>
+      </div>
+    </aside>
   </div>
 </section>
 
-<!-- Modal de recadrage -->
+<section class="account-panel" id="securite" data-account-panel="securite">
+  <div class="account-grid enhanced">
+    <form class="account-card account-card--wide" method="POST" action="/account/password">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="section-heading-inline">
+        <div>
+          <p class="kicker">Securite</p>
+          <h2>Changer le mot de passe</h2>
+        </div>
+      </div>
+      <label>Mot de passe actuel
+        <input type="password" name="currentPassword" autocomplete="current-password" required>
+      </label>
+      <div class="form-two-cols">
+        <label>Nouveau mot de passe
+          <input type="password" name="newPassword" autocomplete="new-password" minlength="8" required>
+        </label>
+        <label>Confirmer
+          <input type="password" name="newPasswordConfirm" autocomplete="new-password" minlength="8" required>
+        </label>
+      </div>
+      <button class="btn btn-primary btn-full" type="submit">Mettre a jour le mot de passe</button>
+      <p class="upload-text">Si ton compte est connecte via Google et que tu n'as pas de mot de passe local, utilise la page "Mot de passe oublie".</p>
+    </form>
+
+    <aside class="account-side enhanced">
+      <div class="card">
+        <h3>Bonnes pratiques</h3>
+        <p class="mini-list">Utilise au moins 8 caracteres, un mot de passe unique et evite de le partager.</p>
+      </div>
+      <div class="card">
+        <h3>Session</h3>
+        <p class="mini-list">Les sessions sont protegees par cookie HTTP only et CSRF sur les formulaires.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="account-panel" id="confidentialite" data-account-panel="confidentialite">
+  <div class="account-grid enhanced">
+    <div class="account-card account-card--wide">
+      <div class="section-heading-inline">
+        <div>
+          <p class="kicker">RGPD</p>
+          <h2>Mes donnees</h2>
+        </div>
+      </div>
+      <p class="lead">Tu peux telecharger une copie JSON des donnees de compte, d'abonnement et de newsletter associees a ton email.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/account/export">Exporter mes donnees</a>
+        <a class="btn btn-ghost" href="/privacy">Voir la confidentialite</a>
+        <button class="btn btn-ghost" type="button" data-cookie-settings>Gerer les cookies</button>
+      </div>
+    </div>
+
+    <form class="account-card" method="POST" action="/account/newsletter">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <h3>Newsletter</h3>
+      <label class="checkbox">
+        <input type="checkbox" name="newsletter" value="1" <%= newsletterActive ? 'checked' : '' %>>
+        Recevoir les emails OLYMP
+      </label>
+      <button class="btn btn-outline pill" type="submit">Enregistrer ma preference</button>
+    </form>
+
+    <form class="account-card danger-zone" method="POST" action="/account/delete" data-confirm-form>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <h3>Supprimer mon compte</h3>
+      <p>Action definitive : profil, abonnements et inscription newsletter seront supprimes. Les donnees deja traitees par des prestataires peuvent rester soumises a leurs delais techniques.</p>
+      <% if (!user.googleId) { %>
+        <label>Mot de passe
+          <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+      <% } %>
+      <label>Tape SUPPRIMER
+        <input type="text" name="confirmDelete" autocomplete="off" required>
+      </label>
+      <button class="btn btn-danger btn-full" type="submit">Supprimer definitivement</button>
+    </form>
+  </div>
+</section>
+
 <div class="avatar-cropper-modal" id="cropperModal" aria-hidden="true">
   <div class="avatar-cropper-modal__content">
     <h3>Recadre ta photo</h3>
     <div class="avatar-cropper-modal__canvas">
-      <img id="cropperImage" alt="Aperçu" style="max-width:100%; display:block;">
+      <img id="cropperImage" alt="Apercu" style="max-width:100%; display:block;">
     </div>
     <div class="avatar-cropper-modal__actions">
       <button type="button" class="btn btn-ghost" id="cropperCancel">Annuler</button>

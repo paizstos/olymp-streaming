@@ -45,7 +45,7 @@ router.get('/dash' ,(req, res) => {
     if (!req.session.user){
         return res.redirect('/')
     } else {
-        return res.redirect('/videos')
+        return res.redirect('/videos/')
     }
 });
 
@@ -107,7 +107,7 @@ router.post('/login', async (req, res) => {
     });
 
     if (active) {
-      return res.redirect(returnTo || '/videos');
+      return res.redirect(returnTo || '/videos/');
     }
 
     return res.redirect('/payment/choose');
@@ -175,6 +175,9 @@ router.post('/register', async (req, res) => {
       birthDate,
       country,
       emailVerified: true,
+      termsVersion: req.app.locals?.termsVersion || res.locals.termsVersion || '2026-07-15',
+      termsAcceptedAt: new Date(),
+      marketingConsentAt: newsletter === '1' ? new Date() : null,
       verifyToken: null,
       verifyTokenExpires: null
     });

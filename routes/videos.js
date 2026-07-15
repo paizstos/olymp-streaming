@@ -48,20 +48,20 @@ router.get('/:id', ensureActiveSubscription, async (req, res) => {
   try {
     if (!youtubeClient.configured) {
       req.flash('error', 'Les videos YouTube ne sont pas encore configurees.');
-      return res.redirect('/videos');
+      return res.redirect('/videos/');
     }
 
     const video = await youtubeClient.getVideoById(req.params.id);
     if (!video) {
       req.flash('error', 'Video introuvable.');
-      return res.redirect('/videos');
+      return res.redirect('/videos/');
     }
 
     res.render('videos/show', { video });
   } catch (err) {
     console.error('Erreur API YouTube (show):', err);
     req.flash('error', 'Impossible de charger cette video YouTube.');
-    res.redirect('/videos');
+    res.redirect('/videos/');
   }
 });
 

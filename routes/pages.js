@@ -23,6 +23,25 @@ router.get('/cookies', (req, res) => {
   res.render('pages/cookies');
 });
 
+router.get('/newsletter/unsubscribe', (req, res) => {
+  const email = String(req.query.email || '').trim().toLowerCase();
+  res.render('pages/unsubscribe', {
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : ''
+  });
+});
+
+router.post('/newsletter/unsubscribe', async (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    req.flash('error', 'Merci de saisir une adresse email valide.');
+    return res.redirect('/newsletter/unsubscribe');
+  }
+
+  await NewsletterSignup.destroy({ where: { email } });
+  req.flash('success', 'Si cette adresse etait inscrite, elle a ete retiree de la newsletter.');
+  res.redirect('/newsletter/unsubscribe');
+});
+
 router.get('/music', ensureActiveSubscription, (req, res) => {
   res.render('pages/music', { comingSoon: true });
 });

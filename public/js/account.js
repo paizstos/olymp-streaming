@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const tabs = Array.from(document.querySelectorAll('[data-account-tab]'));
+  const panels = Array.from(document.querySelectorAll('[data-account-panel]'));
+  const confirmForms = Array.from(document.querySelectorAll('[data-confirm-form]'));
   const fileInput = document.getElementById('avatarFile');
   const hiddenUrl = document.getElementById('avatarUrl');
   const preview = document.getElementById('avatarPreview');
@@ -9,6 +12,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCancel = document.getElementById('cropperCancel');
   const btnValidate = document.getElementById('cropperValidate');
   let cropperInstance = null;
+
+  const activateTab = (name) => {
+    const next = name || 'profil';
+    tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.accountTab === next));
+    panels.forEach(panel => panel.classList.toggle('active', panel.dataset.accountPanel === next));
+  };
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const name = tab.dataset.accountTab;
+      activateTab(name);
+      if (name) history.replaceState(null, '', `#${name}`);
+    });
+  });
+
+  const initialHash = window.location.hash.replace('#', '');
+  if (initialHash) activateTab(initialHash);
+
+  window.addEventListener('hashchange', () => {
+    activateTab(window.location.hash.replace('#', ''));
+  });
+
+  confirmForms.forEach(form => {
+    form.addEventListener('submit', (event) => {
+      const input = form.querySelector('input[name="confirmDelete"]');
+      if (!input || input.value.trim() !== 'SUPPRIMER') return;
+      const ok = window.confirm('Confirmer la suppression definitive du compte OLYMP ?');
+      if (!ok) event.preventDefault();
+    });
+  });
 
   const cloudName = hiddenUrl?.dataset.cloudinaryCloud || '';
   const uploadPreset = hiddenUrl?.dataset.cloudinaryPreset || '';
