@@ -655,15 +655,25 @@ textarea:focus-visible {
 .static-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
+  gap: 16px;
 }
 
-.static-page .card {
+.static-page .card,
+.page-wrapper > .static-grid .card {
   background: var(--bg-card);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
-  padding: 14px;
+  padding: clamp(18px, 3vw, 24px);
   box-shadow: var(--shadow-subtle);
+}
+
+.page-wrapper > .static-hero,
+.page-wrapper > .static-grid {
+  width: 100%;
+}
+
+.page-wrapper > .static-hero {
+  padding-inline: clamp(2px, 0.8vw, 10px);
 }
 
 .contact-form label {
@@ -1712,12 +1722,17 @@ textarea:focus-visible {
     grid-auto-columns: minmax(180px, 1fr);
     overflow-x: auto;
     padding-bottom: 6px;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 2px;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pinch-zoom;
   }
 
   .hero-carousel-item {
     min-width: 180px;
     scroll-snap-align: start;
+    touch-action: pan-x pinch-zoom;
   }
 }
 
@@ -3782,6 +3797,9 @@ textarea:focus-visible {
   .hero-carousel {
     grid-auto-columns: minmax(180px, 74vw);
     gap: 10px;
+    margin-inline: -2px;
+    padding-inline: 2px 18px;
+    overflow-y: visible;
   }
 
   .hero-carousel-thumb {
@@ -4301,6 +4319,18 @@ textarea::placeholder {
   .pricing-card-inner,
   .coming-soon-card {
     overflow-wrap: anywhere;
+  }
+
+  .page-wrapper > .static-hero {
+    padding-inline: 4px;
+  }
+
+  .page-wrapper > .static-grid {
+    gap: 14px;
+  }
+
+  .page-wrapper > .static-grid .card {
+    padding: 20px;
   }
 }
 

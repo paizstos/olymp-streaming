@@ -385,7 +385,13 @@
   grid-auto-columns: minmax(160px, 200px);
   gap: 12px;
   overflow-x: auto;
-  padding-bottom: 6px;
+  overflow-y: visible;
+  padding: 0 4px 8px;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 4px;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pinch-zoom;
 }
 
 .hero-carousel::-webkit-scrollbar {
@@ -402,6 +408,8 @@
   border: 1px solid transparent;
   padding: 4px 4px 8px;
   cursor: pointer;
+  scroll-snap-align: start;
+  touch-action: pan-x pinch-zoom;
   transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border 0.18s ease-out, background 0.18s;
 }
 
@@ -432,6 +440,7 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.18s ease-out;
 }
 
@@ -471,6 +480,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 }
 
 .hero-carousel-title {
@@ -551,8 +561,9 @@
   }
 
   .hero-carousel {
-    grid-auto-columns: 74vw;
-    padding-right: 6px;
+    grid-auto-columns: minmax(230px, 74vw);
+    margin-inline: -2px;
+    padding-inline: 2px 18px;
   }
 
 }

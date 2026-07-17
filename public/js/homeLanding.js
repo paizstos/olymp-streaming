@@ -159,10 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
       previewItem(index);
     });
 
-    item.addEventListener('touchstart', () => {
-      previewItem(index);
-    }, { passive: true });
-
     item.addEventListener('focusin', () => {
       previewItem(index);
     });
@@ -176,7 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pause la rotation au survol du carrousel pour laisser le temps de lire
   if (heroCarousel) {
     heroCarousel.addEventListener('mouseenter', stopRotation);
+    heroCarousel.addEventListener('pointerdown', stopRotation, { passive: true });
     heroCarousel.addEventListener('touchstart', stopRotation, { passive: true });
+    heroCarousel.addEventListener('scroll', stopRotation, { passive: true });
     heroCarousel.addEventListener('mouseleave', startRotation);
   }
 });
